@@ -173,4 +173,107 @@ class FingerMathFormulaHelper {
 
     return 'Trừ trực tiếp: Gập bớt $absVal ngón trên Tay Phải.';
   }
+
+  /// Tạo hướng dẫn giải chi tiết từng bước cho bài toán Finger Math
+  static FingerMathGuidance generateFullGuidance({
+    required List<int> operands,
+    required int expectedAnswer,
+  }) {
+    if (operands.isEmpty) {
+      return FingerMathGuidance(
+        steps: ['Bắt đầu với 2 bàn tay nắm lại (0).'],
+        spokenText: 'Bắt đầu với hai bàn tay nắm lại bằng không.',
+        expectedAnswer: expectedAnswer,
+      );
+    }
+
+    final steps = <String>[];
+    final spokenParts = <String>[];
+
+    int runningTotal = 0;
+
+    // Bước 1: Số đầu tiên
+    final firstOp = operands.first;
+    runningTotal = firstOp;
+    if (firstOp < 10) {
+      if (firstOp == 0) {
+        steps.add('👉 Bước 1: Bắt đầu từ 0 (Tay Phải nắm lại).');
+        spokenParts.add('Bước một: Bắt đầu từ không, tay phải nắm lại.');
+      } else if (firstOp < 5) {
+        steps.add('👉 Bước 1: Bắt đầu từ $firstOp (Tay Phải bung $firstOp ngón dài).');
+        spokenParts.add('Bước một: Bắt đầu từ số $firstOp, tay phải bung $firstOp ngón dài.');
+      } else if (firstOp == 5) {
+        steps.add('👉 Bước 1: Bắt đầu từ 5 (Tay Phải xòe ngón cái = 5).');
+        spokenParts.add('Bước một: Bắt đầu từ số năm, tay phải xòe ngón cái.');
+      } else {
+        final rem = firstOp - 5;
+        steps.add('👉 Bước 1: Bắt đầu từ $firstOp (Tay Phải xòe ngón cái 5 + $rem ngón dài).');
+        spokenParts.add('Bước một: Bắt đầu từ số $firstOp, tay phải xòe ngón cái năm và $rem ngón dài.');
+      }
+    } else {
+      final tens = firstOp ~/ 10;
+      final units = firstOp % 10;
+      steps.add('👉 Bước 1: Bắt đầu từ $firstOp (Tay Trái bung $tens ngón = ${tens * 10}, Tay Phải $units ngón).');
+      spokenParts.add('Bước một: Bắt đầu từ số $firstOp, tay trái bung $tens ngón chục, tay phải $units ngón đơn vị.');
+    }
+
+    // Các bước tiếp theo
+    for (int i = 1; i < operands.length; i++) {
+      final op = operands[i];
+      final isAdd = op > 0;
+      final absVal = op.abs();
+      final stepNum = i + 1;
+
+      final instruction = getStepInstruction(
+        currentValue: runningTotal,
+        operand: op,
+      );
+
+      final prefix = isAdd ? 'Cộng $absVal' : 'Trừ $absVal';
+      steps.add('👉 Bước $stepNum: $prefix:\n$instruction');
+
+      // Tạo câu nói tự nhiên cho TTS
+      final spokenPrefix = isAdd ? 'cộng $absVal' : 'trừ $absVal';
+      if (instruction.contains('Anh Bạn Nhỏ')) {
+        spokenParts.add('Bước $stepNum: $spokenPrefix, áp dụng công thức anh bạn nhỏ.');
+      } else if (instruction.contains('Anh Bạn Lớn')) {
+        spokenParts.add('Bước $stepNum: $spokenPrefix, áp dụng công thức anh bạn lớn.');
+      } else {
+        spokenParts.add('Bước $stepNum: $spokenPrefix, thao tác trực tiếp trên các ngón tay.');
+      }
+
+      runningTotal += op;
+    }
+
+    // Kết luận
+    final tensAns = expectedAnswer ~/ 10;
+    final unitsAns = expectedAnswer % 10;
+    String finalDesc;
+    if (expectedAnswer < 10) {
+      finalDesc = 'Tay Phải giữ $expectedAnswer';
+    } else {
+      finalDesc = 'Tay Trái giữ ${tensAns * 10} và Tay Phải giữ $unitsAns';
+    }
+    steps.add('✨ Kết quả: $finalDesc ➡️ Đáp án đúng là $expectedAnswer.');
+    spokenParts.add('Kết quả chính xác là $expectedAnswer bé nhé!');
+
+    return FingerMathGuidance(
+      steps: steps,
+      spokenText: spokenParts.join(' '),
+      expectedAnswer: expectedAnswer,
+    );
+  }
+}
+
+/// Dữ liệu hướng dẫn từng bước
+class FingerMathGuidance {
+  final List<String> steps;
+  final String spokenText;
+  final int expectedAnswer;
+
+  const FingerMathGuidance({
+    required this.steps,
+    required this.spokenText,
+    required this.expectedAnswer,
+  });
 }

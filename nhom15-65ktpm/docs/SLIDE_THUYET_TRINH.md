@@ -1,7 +1,7 @@
 # Dàn Ý Slide Thuyết Trình Báo Cáo Đồ Án (Presentation Deck Outline)
 
 **Học phần:** Phát Triển Ứng Dụng Di Động (PTUDDD) - Lớp 65KTPM  
-**Đề tài:** Ứng dụng học toán Soroban & Finger Math tương tác 2 bàn tay rèn luyện tư duy cho trẻ 4-6 tuổi kết hợp AI trợ lý giọng nói (Soroban Kids App)  
+**Đề tài:** Ứng dụng học toán Finger Math (Toán ngón tay) tương tác hai bàn tay kết hợp AI trợ lý giọng nói cho trẻ 4–6 tuổi (Finger Math Kids App)  
 **Giảng viên hướng dẫn:** Thầy Đỗ Oanh Cường  
 **Nhóm thực hiện:** Nhóm 15  
 - Dương Nguyên Anh (2351170569) - Nhóm trưởng
@@ -12,21 +12,21 @@
 ---
 
 ### SLIDE 1: TRANG TIÊU ĐỀ (TITLE SLIDE)
-- **Tiêu đề chính:** Finger Math APP
-- **Tiêu đề phụ:** Ứng dụng học toán Finger Math tương tác hai bàn tay kết hợp AI trợ lý giọng nói tiếng Việt cho trẻ 4–6 tuổi.
+- **Tiêu đề chính:** FINGER MATH KIDS APP
+- **Tiêu đề phụ:** Ứng dụng học toán ngón tay Finger Math tương tác hai bàn tay kết hợp AI trợ lý giọng nói tiếng Việt cho trẻ 4–6 tuổi.
 - **Thông tin báo cáo:**
   - Giảng viên hướng dẫn: **Thầy Đỗ Oanh Cường**
   - Lớp học phần: **65KTPM**
   - Đơn vị thực hiện: **Nhóm 15**
-- **Hình ảnh gợi ý:** Logo gấu trúc Panda thân thiện, bàn tính Soroban ảo và đôi bàn tay Finger Math rực rỡ sắc màu.
+- **Hình ảnh gợi ý:** Logo gấu trúc Panda thân thiện, đôi bàn tay thẻ bài Flashcard 1D rực rỡ sắc màu.
 
 ---
 
 ### SLIDE 2: BỐI CẢNH & TÍNH CẤP THIẾT
-- **Đặc thù lứa tuổi 4–6:** Giai đoạn vàng phát triển bán cầu não; tuy nhiên trẻ chưa biết đọc/viết chữ và khả năng tập trung có hạn.
-- **Bất cập của cách học truyền thống:** Sách giáo khoa khô khan, bàn tính gỗ cồng kềnh, thiếu phản hồi tức thì và thiếu người đồng hành tương tác.
+- **Đặc thù lứa tuổi 4–6:** Giai đoạn vàng phát triển não bộ; tuy nhiên trẻ chưa biết đọc/viết chữ và khả năng tập trung có hạn.
+- **Bất cập của cách học truyền thống:** Sách giáo khoa in khô khan, thiếu phản hồi tức thì và thiếu người đồng hành tương tác.
 - **Giải pháp của Nhóm 15:** 
-  - Số hóa phương pháp **Toán ngón tay Finger Math** và **Bàn tính Soroban** trên cùng một ứng dụng.
+  - Số hóa phương pháp **Toán ngón tay Finger Math** chuẩn quốc tế trực quan hóa qua đôi bàn tay trẻ thơ.
   - Triết lý **Giao diện Không chữ (Zero-Text UI)**: Biểu tượng lớn, âm thanh vui nhộn, không rào cản chữ viết.
   - Tích hợp **AI Trợ lý giọng nói tiếng Việt** lắng nghe và chấm điểm tự nhiên.
 
@@ -34,7 +34,7 @@
 
 ### SLIDE 3: MỤC TIÊU & NGUYÊN TẮC THIẾT KẾ CỐT LÕI
 1. **Phạm vi toán học:** Giới hạn độc quyền ở **phép Cộng và phép Trừ** (phạm vi $0 \to 99$, kết quả không âm), tuyệt đối không quá tải cho lứa tuổi mầm non.
-2. **Hệ thống tương tác kép:** Vừa có bàn tính Soroban ảo 60fps, vừa có đôi bàn tay Finger Math chạm đa điểm.
+2. **Hình ảnh thẻ bài Flashcard trực quan:** Sử dụng trực tiếp bộ thẻ Flashcard 1D chuẩn (bàn tay rõ nét, đẹp mắt).
 3. **Chuẩn hóa công thức toán tư duy:** Hiện thực hóa đầy đủ hai bộ công thức kinh điển: **Anh bạn nhỏ (tổng = 5)** và **Anh bạn lớn (tổng = 10)**.
 4. **AI giọng nói tiếng Việt:** Tự động lọc từ đệm dạ thưa và trích xuất đáp án chính xác của trẻ.
 5. **Gia sư thích ứng (Adaptive Learning):** Đo lường thời gian phản hồi và độ chính xác để tự động điều chỉnh tốc độ Flash Anzan.
@@ -52,8 +52,10 @@
 
 ---
 
-### SLIDE 5: MODULE 1 - BÀN TAY FINGER MATH & BÀN TÍNH SOROBAN (Dương Nguyên Anh)
-- **Công nghệ lập trình đồ họa:** Sử dụng `CustomPainter` tối ưu 60fps, không dùng ảnh tĩnh.
+### SLIDE 5: MODULE 1 - FINGER MATH ENGINE 2 BÀN TAY (Dương Nguyên Anh)
+- **Tích hợp hình ảnh thẻ bài Flashcard:**
+  - Bóc tách toàn bộ 10 thẻ bài ngón tay từ bộ Flashcard 1D RH/LH chuẩn.
+  - Chạm trực tiếp vào thẻ bài để chuyển số hoặc chọn nhanh bằng bàn phím số (0 đến 9) bên dưới.
 - **Quy ước chuẩn Hai Bàn Tay (Phạm vi $0 \to 99$):**
   - **Tay Phải (Hàng đơn vị: $0 \to 9$):** Ngón cái = $5$, mỗi ngón dài = $1$.
     - $6 = 5 \text{ (cái)} + 1 \text{ (trỏ)}$
@@ -62,10 +64,7 @@
     - $9 = 5 + 4$ (cả bàn tay)
   - **Tay Trái (Hàng chục: $10 \to 90$):** Ngón cái = $50$, mỗi ngón dài = $10$.
   - Kết hợp 2 tay: Biểu diễn từ $0 \to 99$ linh hoạt.
-- **Bàn tính Soroban ảo:**
-  - Hạt trên (5), 4 hạt dưới (1) hình quả trám 3D.
-  - Phản hồi rung xúc giác (Haptic Feedback) và âm thanh gảy hạt chân thực.
-- **Tính năng chuyển đổi kép:** Trẻ tự do chuyển đổi giữa ✋ Finger Math và 🧮 Soroban ngay trong màn hình luyện tập.
+- **Cửa sổ tra cứu Flashcard:** Hiển thị toàn bộ bảng ảnh gốc và hướng dẫn công thức chi tiết.
 
 ---
 
@@ -100,13 +99,12 @@
 ### SLIDE 8: MODULE 3 - LOGIC BÀI HỌC CỘNG TRỪ & FLASH ANZAN (Nguyễn Thị Thu Hoài)
 - **Bộ sinh đề thông minh (Question Generator):**
   - Cam kết độc quyền **chỉ phép Cộng và Trừ**, không ra số âm ($0 \le \text{kết quả} \le 99$).
-  - Phân cấp 4 lộ trình học:
+  - Phân cấp 3 lộ trình học:
     - *Cấp 1:* Làm quen số đếm ngón tay từ 0 đến 9.
-    - *Cấp 2:* Phép cộng trừ trực tiếp (không dùng công thức).
-    - *Cấp 3:* Phép tính áp dụng Công thức Anh Bạn Nhỏ (tổng = 5).
-    - *Cấp 4:* Phép tính áp dụng Công thức Anh Bạn Lớn (tổng = 10 qua 2 bàn tay).
-- **Siêu trí tuệ Flash Anzan:**
-  - Chớp số siêu tốc từ 0.5s đến 1.5s kích thích tư duy hình dung não phải.
+    - *Cấp 2:* Phép tính áp dụng Công thức Anh Bạn Nhỏ (tổng = 5) & Anh Bạn Lớn (tổng = 10 qua 2 bàn tay).
+    - *Cấp 3:* Tính nhẩm nhanh Flash Anzan Finger Math.
+- **Flash Anzan siêu tốc:**
+  - Chớp số siêu tốc từ 0.5s đến 1.5s kích thích tư duy tính nhẩm.
   - Khoảng nghỉ trắng mắt 180ms giữa các số giúp tăng khả năng tập trung cao độ.
 
 ---
@@ -140,8 +138,8 @@
 ---
 
 ### SLIDE 11: KẾT QUẢ KIỂM THỬ CHẤT LƯỢNG (TESTING & QA)
-- **Bộ kiểm thử tự động (Unit Test):** **22/22 ca kiểm thử vượt qua 100% (Passed)**
-  - *Module 1:* 6 ca test bàn tính Soroban + 5 ca test Finger Math 2 bàn tay & công thức Anh bạn nhỏ, Anh bạn lớn.
+- **Bộ kiểm thử tự động (Unit Test):** **19/19 ca kiểm thử vượt qua 100% (Passed)**
+  - *Module 1:* 8 ca test Finger Math 2 bàn tay & công thức Anh bạn nhỏ, Anh bạn lớn.
   - *Module 2:* 3 ca test thuật toán chuỗi ngày học Streak.
   - *Module 3:* 1 ca test giao diện nút bấm KidButton + bộ sinh đề cộng trừ.
   - *Module 4:* 4 ca test NLP trích xuất số tiếng Việt + 3 ca test gia sư thích ứng AI.
@@ -154,7 +152,7 @@
 ### SLIDE 12: ĐÁNH GIÁ ĐÓNG GÓP THÀNH VIÊN (NHÓM 15)
 | MSSV | Họ Tên | Vai Trò & Phụ Trách Module | Mức Độ Hoàn Thành |
 | :---: | :--- | :--- | :---: |
-| **2351170569** | **Dương Nguyên Anh** | **Nhóm trưởng / Tech Lead**<br>Phụ trách Module 1: Soroban & Finger Math Engine | **100%** |
+| **2351170569** | **Dương Nguyên Anh** | **Nhóm trưởng / Tech Lead**<br>Phụ trách Module 1: Finger Math Engine 2 Bàn Tay | **100%** |
 | **2351060487** | **Phạm Duy Thái** | **Thành viên**<br>Phụ trách Module 2: UI/UX Zero-Text, Gamification Streak & Parent Dashboard | **100%** |
 | **2351170594** | **Nguyễn Thị Thu Hoài** | **Thành viên**<br>Phụ trách Module 3: Bộ sinh đề cộng trừ & Flash Anzan siêu tốc | **100%** |
 | **2351170605** | **Nguyễn Thị Cẩm Ly** | **Thành viên**<br>Phụ trách Module 4: AI Speech-to-Text tiếng Việt & Gia sư thích ứng | **100%** |
@@ -164,7 +162,7 @@
 ### SLIDE 13: KẾT LUẬN & HƯỚNG PHÁT TRIỂN
 - **Kết luận:**
   - Đồ án đáp ứng xuất sắc mọi yêu cầu của môn học Phát triển ứng dụng đa thiết bị.
-  - Ứng dụng mang tính thực tiễn cao, giao diện hấp dẫn, giúp trẻ mầm non yêu thích môn toán tư duy.
+  - Ứng dụng mang tính thực tiễn cao, giao diện thẻ bài Flashcard hấp dẫn, giúp trẻ mầm non yêu thích môn toán tư duy ngón tay.
 - **Hướng phát triển tương lai:**
   - Tích hợp nhận diện cử chỉ bàn tay qua Camera (Computer Vision) để theo dõi động tác ngón tay ngoài đời thực.
   - Mở rộng đấu trường thi đấu tính nhẩm Flash Anzan trực tuyến nhiều người chơi (Multiplayer).

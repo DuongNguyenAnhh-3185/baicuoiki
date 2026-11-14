@@ -7,7 +7,7 @@
 ---
 
 ## ĐỀ TÀI:
-# ỨNG DỤNG HỌC TOÁN SOROBAN & FINGER MATH TƯƠNG TÁC HAI BÀN TAY KẾT HỢP TRỢ LÝ GIỌNG NÓI TIẾNG VIỆT CHO TRẺ 4–6 TUỔI (SOROBAN KIDS APP)
+# ỨNG DỤNG HỌC TOÁN FINGER MATH TƯƠNG TÁC HAI BÀN TAY KẾT HỢP TRỢ LÝ GIỌNG NÓI TIẾNG VIỆT CHO TRẺ 4–6 TUỔI (FINGER MATH KIDS APP)
 
 **Giảng viên hướng dẫn:** Thầy Đỗ Oanh Cường  
 **Nhóm sinh viên thực hiện:** NHÓM 15  
@@ -40,7 +40,7 @@
   - [3.4. Hệ thống công thức Toán tư duy (Anh bạn nhỏ & Anh bạn lớn)](#34-hệ-thống-công-thức-toán-tư-duy-anh-bạn-nhỏ--anh-bạn-lớn)
   - [3.5. Thuật toán Gia sư thích ứng (Adaptive Learning Engine)](#35-thuật-toán-gia-sư-thích-ứng-adaptive-learning-engine)
 - [CHƯƠNG 4: HIỆN THỰC HÓA VÀ KẾT QUẢ ĐẠT ĐƯỢC](#chương-4-hiện-thực-hóa-và-kết-quả-đạt-được)
-  - [4.1. Hiện thực Module 1: Finger Math Engine & Soroban ảo 60fps](#41-hiện-thực-module-1-finger-math-engine--soroban-ảo-60fps)
+  - [4.1. Hiện thực Module 1: Finger Math Engine 60fps & Flashcard Bàn Tay Trực Quan](#41-hiện-thực-module-1-finger-math-engine-60fps--flashcard-bàn-tay-trực-quan)
   - [4.2. Hiện thực Module 2: Zero-Text UI, Gamification Streak & Cổng phụ huynh](#42-hiện-thực-module-2-zero-text-ui-gamification-streak--cổng-phụ-huynh)
   - [4.3. Hiện thực Module 3: Bộ sinh đề cộng trừ & Flash Anzan](#43-hiện-thực-module-3-bộ-sinh-đề-cộng-trừ--flash-anzan)
   - [4.4. Hiện thực Module 4: Nút Micro AI bóc tách tiếng Việt](#44-hiện-thực-module-4-nút-micro-ai-bóc-tách-tiếng-việt)
@@ -56,27 +56,27 @@
 
 Nhóm 15 xin được gửi lời cảm ơn chân thành và sâu sắc nhất tới **Thầy Đỗ Oanh Cường**, giảng viên phụ trách học phần **Phát Triển Ứng Dụng Di Động (PTUDDD)**. Thầy đã truyền đạt những kiến thức quý báu về tư duy kiến trúc phần mềm di động, quy trình làm việc nhóm chuyên nghiệp theo chuẩn Git/GitHub, và định hướng giải quyết bài toán thực tế.
 
-Nhờ sự hướng dẫn tận tình và những góp ý xác đáng của thầy, nhóm đã hoàn thành đồ án **Soroban Kids App** đúng tiến độ, đảm bảo chất lượng kỹ thuật cao, đáp ứng đầy đủ yêu cầu nghiệp vụ và mang lại giá trị nhân văn cho đối tượng trẻ nhỏ.
+Nhờ sự hướng dẫn tận tình và những góp ý xác đáng của thầy, nhóm đã hoàn thành đồ án **Finger Math Kids App** đúng tiến độ, đảm bảo chất lượng kỹ thuật cao, đáp ứng đầy đủ yêu cầu nghiệp vụ và mang lại giá trị nhân văn cho đối tượng trẻ nhỏ.
 
 ---
 
 ## CHƯƠNG 1: TỔNG QUAN VÀ TÍNH CẤP THIẾT CỦA ĐỀ TÀI
 
 ### 1.1. Bối cảnh chuyển đổi số trong giáo dục sớm
-Trong kỷ nguyên số, việc tiếp cận sớm với tư duy logic toán học đóng vai trò nền tảng trong việc kích thích sự phát triển cân bằng giữa hai bán cầu não của trẻ em. Phương pháp tính nhẩm **Soroban (bàn tính Nhật Bản)** và **Finger Math (toán ngón tay)** từ lâu đã được khoa học chứng minh là phương pháp vượt trội để kích hoạt bán cầu não phải (tư duy hình tượng, không gian) song song với bán cầu não trái (tư duy logic, con số).
+Trong kỷ nguyên số, việc tiếp cận sớm với tư duy logic toán học đóng vai trò nền tảng trong việc kích thích sự phát triển cân bằng giữa hai bán cầu não của trẻ em. Phương pháp tính nhẩm **Finger Math (toán ngón tay 2 bàn tay)** từ lâu đã được khoa học chứng minh là phương pháp vượt trội để kích hoạt bán cầu não phải (tư duy hình tượng, không gian) song song với bán cầu não trái (tư duy logic, con số).
 
 ### 1.2. Thách thức đặc thù của lứa tuổi 4–6
 Trẻ trong độ tuổi mầm non (4–6 tuổi) có những rào cản tâm sinh lý rất đặc biệt:
 1. **Chưa biết đọc, biết viết thành thạo:** Không thể sử dụng các ứng dụng có quá nhiều văn bản hay câu hỏi dạng chữ.
 2. **Khả năng điều khiển vận động tinh đang phát triển:** Ngón tay trẻ nhỏ, dễ bấm trượt nếu các nút bấm quá nhỏ.
 3. **Thời gian chú ý ngắn (Short Attention Span):** Dễ chán nản nếu bài học khô khan, thiếu phản hồi tức thì về âm thanh, màu sắc hoặc thiếu tính tương tác trực quan.
-4. **Bàn tính vật lý cồng kềnh:** Khó mang theo, thiếu người kèm cặp kiểm tra đúng sai tại nhà.
+4. **Thiếu công cụ trực quan hóa hai bàn tay:** Khó hình dung các phép cộng trừ có nhớ qua hàng chục hoặc công thức Anh bạn nhỏ, Anh bạn lớn.
 
 ### 1.3. Mục tiêu và phạm vi ứng dụng
 Nhóm 15 đặt ra các mục tiêu giải quyết triệt để các thách thức trên:
 - **Phạm vi toán học an toàn:** Cam kết **chỉ giới hạn ở phép Cộng và phép Trừ** trong phạm vi từ $0$ đến $99$. Tuyệt đối không đưa phép nhân, chia hay kết quả âm vào bài học.
 - **Triết lý giao diện Không chữ (Zero-Text UI):** Thay thế chữ viết bằng biểu tượng hoạt hình lớn, màu sắc sinh động, âm thanh vui nhộn và trợ lý giọng nói tiếng Việt đồng hành.
-- **Hệ thống tương tác kép:** Tích hợp đồng thời cả **Bàn tay Finger Math hai bàn tay** và **Bàn tính Soroban ảo** để trẻ linh hoạt chuyển đổi phương pháp trực quan hóa.
+- **Hệ thống tương tác trực quan:** Tích hợp mô phỏng **Bàn tay Finger Math hai bàn tay** dựa trên bộ thẻ Flashcard 1D chuẩn quốc tế (tay phải hàng đơn vị $0–9$, tay trái hàng chục $10–90$) để trẻ quan sát sinh động và thao tác chạm trực quan.
 - **Tương tác giọng nói tự nhiên:** Cho phép trẻ trả lời trực tiếp bằng lời nói tiếng Việt qua Micro, AI tự động lọc từ đệm dạ thưa và chấm điểm chính xác.
 
 ---
@@ -88,15 +88,15 @@ Nhóm lựa chọn **Flutter 3.x (Dart 3.x)** làm nền tảng phát triển v�
 - **Đa nền tảng thực thụ (Multi-platform):** Biên dịch cùng một cơ sở mã nguồn sang Web Chrome, Windows Desktop native (`.exe`), Android và iOS.
 - **Hiệu năng đồ họa 60–120fps:** Sử dụng engine đồ họa Skia / Impeller kết xuất trực tiếp, không phụ thuộc vào Web View hay cầu nối native bridge.
 
-### 2.2. Lập trình đồ họa hiệu năng cao CustomPainter
-Thay vì sử dụng các hình ảnh tĩnh bitmap gây vỡ nét và giật lag, nhóm tự phát triển 2 engine đồ họa vector tùy biến:
-- `SorobanPainter`: Mô phỏng bàn tính với khung gỗ, xà ngang, thanh định vị, các hạt quả trám 3D đổ bóng theo thời gian thực.
-- `FingerHandPainter`: Vẽ hình học ngón tay hoạt hình với da hoạt họa, nếp gấp khớp ngón, góc xoay ngón cái nghiêng tự nhiên và nhãn giá trị động.
+### 2.2. Lập trình đồ họa hiệu năng cao CustomPainter & Flashcard Engine
+Thay vì sử dụng các hình ảnh cố định thiếu linh hoạt, nhóm kết hợp giải pháp đồ họa tiên tiến:
+- `FingerHandPainter`: Tự động tính toán khung viền, vị trí ngón tay, nếp gấp khớp ngón và trạng thái ngón bung/gập theo thời gian thực.
+- Flashcard Engine 1D: Tích hợp trực tiếp bộ thẻ Flashcard 1D chuẩn hình ảnh thật (0 đến 9), tự động lật đối xứng bằng `Transform.flip` cho bàn tay trái, hiển thị siêu nét trên mọi độ phân giải.
 
 ### 2.3. Xử lý âm thanh & Công nghệ giọng nói tiếng Việt
 - `flutter_tts`: Tổng hợp giọng đọc tiếng Việt (`vi-VN`) với cao độ vui nhộn ($1.2$) và tốc độ vừa phải ($0.45$), đóng vai trò gia sư AI động viên trẻ.
 - `speech_to_text`: Ghi nhận âm thanh từ microphone thiết bị theo chuẩn âm vực tiếng nói trẻ nhỏ.
-- `HapticFeedback`: Tạo rung xúc giác nhẹ ngay khi hạt chạm xà ngang hoặc khi bung ngón tay, tạo cảm giác chạm vật lý sống động.
+- `HapticFeedback`: Tạo rung xúc giác nhẹ khi bung ngón tay hoặc chọn số, tạo cảm giác chạm vật lý sống động.
 
 ### 2.4. Trực quan hóa dữ liệu & Lưu trữ cục bộ
 - `fl_chart`: Vẽ biểu đồ cột tiến độ hàng tuần hiển thị cho phụ huynh.
@@ -112,7 +112,7 @@ Thay vì sử dụng các hình ảnh tĩnh bitmap gây vỡ nét và giật lag
 flowchart LR
     subgraph TreEm ["Phân Hệ Bé Học Tập"]
         UC1["Tập đếm ngón tay Finger Math"]
-        UC2["Gạt hạt Bàn tính Soroban"]
+        UC2["Nhận diện số Flashcard Bàn tay"]
         UC3["Làm bài tập Cộng Trừ"]
         UC4["Trả lời bằng Giọng nói AI"]
         UC5["Tính nhẩm nhanh Flash Anzan"]
@@ -140,7 +140,7 @@ Dự án được tổ chức theo mô hình **Feature-First Clean Architecture*
 - `lib/core/`: Các hằng số màu sắc, dịch vụ hạ tầng (`AudioService`, `StorageService`).
 - `lib/shared/`: Định nghĩa các thực thể dữ liệu dùng chung (**Data Contract**):
   - `ChildProfile`: Lưu tên bé, tuổi, chuỗi ngày học Streak, điểm số và danh sách huy hiệu.
-  - `SorobanQuestion`: Cấu trúc đề bài (các toán hạng, đáp án mong đợi, cấp độ, tốc độ chớp số).
+  - `SorobanQuestion` (hay `FingerMathQuestion`): Cấu trúc đề bài (các toán hạng, đáp án mong đợi, cấp độ, tốc độ chớp số).
   - `AttemptLog`: Nhật ký một lần làm bài (câu hỏi, câu trả lời, đúng/sai, thời gian phản hồi miligiây, phương thức trả lời).
 - `lib/features/`: 4 module tính năng hoàn toàn độc lập của 4 thành viên.
 
@@ -259,7 +259,7 @@ Hệ thống sử dụng mô hình cửa sổ trượt (Rolling Window) để ph
 
 ### 4.5. Đánh giá chất lượng và kết quả kiểm thử (QA/Testing)
 Hệ thống được kiểm định với bộ kiểm thử tự động toàn diện:
-- **Tỷ lệ kiểm thử tự động (Unit Test):** **22/22 ca kiểm thử passed 100%**.
+- **Tỷ lệ kiểm thử tự động (Unit Test):** **21/21 ca kiểm thử passed 100%**.
 - **Kiểm tra cú pháp và chất lượng mã nguồn:** `dart analyze lib test` đạt chuẩn: **0 Errors, 0 Warnings**.
 - **Khả năng biên dịch đa nền tảng:**
   - Web Chrome: Biên dịch và chạy mượt mà trên trình duyệt.

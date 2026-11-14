@@ -37,6 +37,25 @@ class SorobanQuestion extends Equatable {
     return buffer.toString();
   }
 
+  /// Chuỗi đọc phát âm tiếng Việt đầy đủ dấu phép tính ("cộng", "trừ", "bằng")
+  String get spokenExpression {
+    if (operands.isEmpty) return '';
+    final buffer = StringBuffer();
+    for (int i = 0; i < operands.length; i++) {
+      final val = operands[i];
+      if (i == 0) {
+        buffer.write('$val');
+      } else {
+        if (val >= 0) {
+          buffer.write(' cộng $val');
+        } else {
+          buffer.write(' trừ ${val.abs()}');
+        }
+      }
+    }
+    return buffer.toString();
+  }
+
   @override
   List<Object?> get props => [
         id,
@@ -47,3 +66,6 @@ class SorobanQuestion extends Equatable {
         flashSpeedMs,
       ];
 }
+
+/// Bí danh chuẩn cho Finger Math
+typedef FingerMathQuestion = SorobanQuestion;

@@ -9,18 +9,18 @@ void main() async {
   await di.initDependencies();
   runApp(
     const ProviderScope(
-      child: SorobanKidsApp(),
+      child: FingerMathKidsApp(),
     ),
   );
 }
 
-class SorobanKidsApp extends StatelessWidget {
-  const SorobanKidsApp({super.key});
+class FingerMathKidsApp extends StatelessWidget {
+  const FingerMathKidsApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Soroban Kids - Toán Trí Tuệ Cho Bé',
+      title: 'Finger Math Kids - Toán Ngón Tay Cho Bé',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.kidTheme,
       home: const HomeScreen(),

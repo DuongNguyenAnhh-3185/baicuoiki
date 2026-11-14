@@ -117,6 +117,11 @@ class _FlashAnzanScreenState extends State<FlashAnzanScreen> {
     if (!_waitingForAnswer) return;
 
     final isCorrect = answer == _currentQuestion.expectedAnswer;
+    final guidance = FingerMathFormulaHelper.generateFullGuidance(
+      operands: _currentQuestion.operands,
+      expectedAnswer: _currentQuestion.expectedAnswer,
+    );
+
     final log = AttemptLog(
       questionId: _currentQuestion.id,
       userAnswer: answer,
@@ -140,18 +145,23 @@ class _FlashAnzanScreenState extends State<FlashAnzanScreen> {
     });
 
     if (isCorrect) {
-      await _audioService.playSuccessFeedback();
+      await _audioService.playSuccessFeedback(
+        'Hoan hô bé! Bé đã tính nhẩm siêu tốc rất chính xác! Phép tính ${_currentQuestion.spokenExpression} bằng $answer!',
+      );
       _showResultDialog(
         title: 'XUẤT SẮC! 🎉',
-        message: 'Đúng rồi, đáp án là $answer!\n${decision.message}',
+        formula: '${_currentQuestion.formulaExpression} = $answer ✅',
+        message: 'Hoan hô bé! Bé đã tính nhẩm rất chuẩn xác!\n${decision.message}',
+        guidance: null,
         isSuccess: true,
       );
     } else {
-      await _audioService.playEncouragementFeedback();
+      await _audioService.playEncouragementFeedback(guidance.spokenText);
       _showResultDialog(
-        title: 'CỐ GẮNG NÀO! 💪',
-        message:
-            'Bé trả lời là $answer, đáp án chính xác là ${_currentQuestion.expectedAnswer}.\n${decision.message}',
+        title: 'BÉ CÙNG XEM HƯỚNG DẪN 💡',
+        formula: '${_currentQuestion.formulaExpression} = ?',
+        message: 'Bé trả lời: $answer ❌  |  Đáp án đúng: ${_currentQuestion.expectedAnswer} ⭐\n${decision.message}',
+        guidance: guidance,
         isSuccess: false,
       );
     }
@@ -159,7 +169,9 @@ class _FlashAnzanScreenState extends State<FlashAnzanScreen> {
 
   void _showResultDialog({
     required String title,
+    required String formula,
     required String message,
+    required FingerMathGuidance? guidance,
     required bool isSuccess,
   }) {
     showDialog(
@@ -170,23 +182,100 @@ class _FlashAnzanScreenState extends State<FlashAnzanScreen> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(24),
           ),
-          backgroundColor: isSuccess ? const Color(0xFFF0FFF4) : const Color(0xFFFFF5F5),
+          backgroundColor: isSuccess ? const Color(0xFFF0FFF4) : const Color(0xFFFFF8E1),
           title: Text(
             title,
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 26,
+              fontSize: 22,
               fontWeight: FontWeight.w900,
-              color: isSuccess ? AppColors.success : AppColors.error,
+              color: isSuccess ? AppColors.success : AppColors.accentOrange,
             ),
           ),
-          content: Text(
-            message,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: AppColors.textDark,
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Hiển thị lại câu hỏi rõ ràng
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: isSuccess ? AppColors.success : AppColors.accentOrange,
+                      width: 2,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        formula,
+                        style: TextStyle(
+                          fontSize: 26,
+                          fontWeight: FontWeight.w900,
+                          color: isSuccess ? AppColors.success : AppColors.primary,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      IconButton(
+                        icon: const Icon(Icons.volume_up_rounded, color: AppColors.primary),
+                        tooltip: 'Nghe lại phép tính',
+                        onPressed: () {
+                          _audioService.speak('Phép tính vừa rồi: ${_currentQuestion.spokenExpression}');
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  message,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textDark,
+                  ),
+                ),
+                if (guidance != null) ...[
+                  const SizedBox(height: 12),
+                  const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      '💡 Các bước thực hiện Finger Math:',
+                      style: TextStyle(fontWeight: FontWeight.w800, color: AppColors.accentOrange, fontSize: 15),
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  for (final step in guidance.steps)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 6),
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Text(
+                          step,
+                          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textDark),
+                        ),
+                      ),
+                    ),
+                  ElevatedButton.icon(
+                    onPressed: () => _audioService.speak(guidance.spokenText),
+                    icon: const Icon(Icons.volume_up_rounded, size: 20),
+                    label: const Text('Nghe lại hướng dẫn 🔊'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.accentOrange,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
+                  ),
+                ],
+              ],
             ),
           ),
           actionsAlignment: MainAxisAlignment.center,
@@ -199,8 +288,9 @@ class _FlashAnzanScreenState extends State<FlashAnzanScreen> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: isSuccess ? AppColors.success : AppColors.secondary,
                 padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 12),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
               ),
-              child: const Text('Câu tiếp theo ➡️', style: TextStyle(fontSize: 18)),
+              child: const Text('Câu tiếp theo ➡️', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             ),
           ],
         );

@@ -1,9 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:soroban_kids_app/core/services/audio_service.dart';
+import 'package:soroban_kids_app/shared/entities/soroban_question.dart';
 import 'package:soroban_kids_app/features/1_abacus_engine/domain/entities/finger_hand_state.dart';
 import 'package:soroban_kids_app/features/1_abacus_engine/presentation/controllers/finger_math_controller.dart';
 
 void main() {
-  group('Finger Math Engine Tests (Quy ước chuẩn 2 bàn tay: Tay Phải 0-9, Tay Trái 10-90)', () {
+  group('Finger Math Engine Tests (Module 1 - Dương Nguyên Anh - 100% Finger Math)', () {
     test('TC_FM_01: Kiểm tra quy ước 10 số đếm Tay Phải (Hàng đơn vị 0 đến 9)', () {
       final expectedDescriptions = [
         'Tay Phải: Nắm tay (0)',
@@ -81,11 +83,11 @@ void main() {
       expect(controller.rightHand.digitValue, 0);
     });
 
-    test('TC_FM_04: Kiểm tra công thức Anh Bạn Nhỏ (Cặp bạn nhỏ tổng = 5)', () {
+    test('TC_FM_04: Kiểm tra công thức Anh Bạn Nhỏ phép cộng (+4, +3, +2, +1)', () {
       expect(FingerMathFormulaHelper.getSmallFriend(1), 4);
-      expect(FingerMathFormulaHelper.getSmallFriend(4), 1);
       expect(FingerMathFormulaHelper.getSmallFriend(2), 3);
       expect(FingerMathFormulaHelper.getSmallFriend(3), 2);
+      expect(FingerMathFormulaHelper.getSmallFriend(4), 1);
 
       final controller = FingerMathController(showLeftHand: false);
 
@@ -97,14 +99,22 @@ void main() {
       controller.toggleThumb(HandType.rightHand);
       controller.setExtendedFingers(HandType.rightHand, 0);
       expect(controller.totalValue, 5);
+    });
 
-      // Phép tính 5 - 1 = 4: Cụp ngón cái (-5), xòe 4 ngón dài (+4)
+    test('TC_FM_05: Kiểm tra công thức Anh Bạn Nhỏ phép trừ (-4, -3, -2, -1)', () {
+      final controller = FingerMathController(showLeftHand: false);
+
+      // Phép tính 5 - 1 = 4: Bắt đầu từ 5 (ngón cái xòe)
+      controller.setValue(5);
+      expect(controller.rightHand.digitValue, 5);
+
+      // Áp dụng -1 = -5 + 4: Cụp ngón cái (-5), xòe 4 ngón dài (+4)
       controller.toggleThumb(HandType.rightHand);
       controller.setExtendedFingers(HandType.rightHand, 4);
       expect(controller.totalValue, 4);
     });
 
-    test('TC_FM_05: Kiểm tra công thức Anh Bạn Lớn (Cặp bạn lớn tổng = 10, phối hợp 2 tay)', () {
+    test('TC_FM_06: Kiểm tra công thức Anh Bạn Lớn phép cộng (phối hợp 2 tay)', () {
       expect(FingerMathFormulaHelper.getBigFriend(9), 1);
       expect(FingerMathFormulaHelper.getBigFriend(8), 2);
       expect(FingerMathFormulaHelper.getBigFriend(7), 3);
@@ -119,11 +129,78 @@ void main() {
 
       // Phép tính 6 + 7 = 13:
       // Bạn lớn của 7 là 3 -> Bung 1 ngón Tay Trái (+10), gập 3 ngón ở Tay Phải (-3)
-      // Tay phải đang là 6 (5 + 1), gập 3 -> còn 3 ngón dài (trỏ, giữa, áp út) không ngón cái
       controller.setExtendedFingers(HandType.leftHand, 1); // +10 ở Tay Trái
       controller.toggleThumb(HandType.rightHand); // gập ngón cái 5
       controller.setExtendedFingers(HandType.rightHand, 3); // 3 ngón dài
       expect(controller.totalValue, 13);
+    });
+
+    test('TC_FM_07: Kiểm tra công thức Anh Bạn Lớn phép trừ (mượn 10 từ Tay Trái)', () {
+      final controller = FingerMathController(showLeftHand: true);
+
+      // Bắt đầu từ số 13 (Tay trái: 1 ngón 10, Tay phải: 3 ngón)
+      controller.setValue(13);
+      expect(controller.totalValue, 13);
+
+      // Phép tính 13 - 7 = 6:
+      // Bạn lớn của 7 là 3 -> Gập 1 ngón Tay Trái (-10), bung 3 ngón ở Tay Phải (+3)
+      // Tay phải đang là 3, thêm 3 thành 6 (ngón cái 5 + 1 ngón trỏ)
+      controller.setExtendedFingers(HandType.leftHand, 0); // -10 ở Tay Trái
+      controller.toggleThumb(HandType.rightHand); // mở ngón cái 5
+      controller.setExtendedFingers(HandType.rightHand, 1); // 1 ngón dài
+      expect(controller.totalValue, 6);
+    });
+
+    test('TC_FM_08: Kiểm tra bộ sinh gợi ý hướng dẫn thao tác ngón tay tự động', () {
+      // Phép cộng dùng Anh bạn nhỏ
+      final smallAdd = FingerMathFormulaHelper.getStepInstruction(currentValue: 1, operand: 4);
+      expect(smallAdd.contains('Anh Bạn Nhỏ'), isTrue);
+      expect(smallAdd.contains('+5'), isTrue);
+
+      // Phép cộng dùng Anh bạn lớn
+      final bigAdd = FingerMathFormulaHelper.getStepInstruction(currentValue: 6, operand: 7);
+      expect(bigAdd.contains('Anh Bạn Lớn'), isTrue);
+      expect(bigAdd.contains('+10'), isTrue);
+
+      // Phép trừ dùng Anh bạn lớn
+      final bigSub = FingerMathFormulaHelper.getStepInstruction(currentValue: 13, operand: -7);
+      expect(bigSub.contains('Anh Bạn Lớn'), isTrue);
+      expect(bigSub.contains('-10'), isTrue);
+    });
+
+    test('TC_FM_09: Kiểm tra phát âm tiếng Việt đầy đủ dấu phép tính và chuẩn hóa số', () {
+      final q = const SorobanQuestion(
+        id: 'q_test_1',
+        level: 2,
+        operands: [2, 3, -1],
+        expectedAnswer: 4,
+        type: QuestionType.smallFriend,
+      );
+
+      // Kiểm tra chuỗi hiển thị vs chuỗi phát âm
+      expect(q.formulaExpression, '2 + 3 - 1');
+      expect(q.spokenExpression, '2 cộng 3 trừ 1');
+
+      // Kiểm tra chuẩn hóa 100% tiếng Việt cho TTS
+      final normalized = AudioService.normalizeToVietnamese(q.spokenExpression);
+      expect(normalized, 'hai cộng ba trừ một');
+
+      final equation = AudioService.normalizeToVietnamese('2 + 3 = 5?');
+      expect(equation, 'hai cộng ba bằng năm bao nhiêu');
+    });
+
+    test('TC_FM_10: Kiểm tra bộ sinh hướng dẫn từng bước chi tiết Finger Math khi xem lại', () {
+      final guidance = FingerMathFormulaHelper.generateFullGuidance(
+        operands: [2, 3],
+        expectedAnswer: 5,
+      );
+
+      expect(guidance.steps.length, greaterThanOrEqualTo(2));
+      expect(guidance.steps[0].contains('Bước 1'), isTrue);
+      expect(guidance.steps[1].contains('Bước 2'), isTrue);
+      expect(guidance.steps[1].contains('Anh Bạn Nhỏ'), isTrue);
+      expect(guidance.expectedAnswer, 5);
+      expect(guidance.spokenText.contains('hai'), isTrue);
     });
   });
 }

@@ -1,6 +1,6 @@
 # Đặc Tả Kiến Trúc Hệ Thống (System Architecture Specification)
 
-Dự án: **Soroban Kids App**  
+Dự án: **Finger Math Kids App**  
 Nhóm: **Nhóm 15 - Lớp 65KTPM**
 
 ---
@@ -13,14 +13,14 @@ graph TD
     
     subgraph Shared_Data_Contract[Data Contract - Giao Ước Dữ Liệu Chung]
         CP[ChildProfile]
-        SQ[SorobanQuestion]
+        SQ["SorobanQuestion (FingerMathQuestion)"]
         AL[AttemptLog]
     end
 
-    subgraph Module1[Module 1: Abacus Virtual Engine]
-        SP[SorobanPainter - CustomPainter]
-        AC[AbacusController]
-        Touch[Xử Lý Cảm Ứng Gảy Hạt]
+    subgraph Module1[Module 1: Finger Math Engine 2 Bàn Tay]
+        FHP[FingerHandPainter & Flashcard 1D Engine]
+        FMC[FingerMathController]
+        Touch[Xử Lý Chạm & Chọn Ngón Tay Trực Quan]
     end
 
     subgraph Module2[Module 2: Gamification & Parent]
@@ -33,7 +33,7 @@ graph TD
     subgraph Module3[Module 3: Lesson Logic & Flash Anzan]
         QGen[Bộ Sinh Đề Cấp 1-3]
         Anzan[Bộ Đếm Giờ Chớp Nhoáng]
-        Audio[Phản Hồi Âm Thanh & TTS]
+        Audio[Phản Hồi Âm Thanh & TTS Tiếng Việt Chuẩn]
     end
 
     subgraph Module4[Module 4: AI Voice & Adaptive Learning]
@@ -57,7 +57,7 @@ graph TD
 
 ## 2. Giao Ước Dữ Liệu Cốt Lõi (Data Contract)
 
-> **Lưu ý nghiệp vụ:** Toàn bộ hệ thống được thiết kế **chỉ giới hạn ở phép Cộng và phép Trừ** (phù hợp với lứa tuổi 4–6 tuổi). Tuyệt đối không sinh phép nhân hay chia. Mọi phép toán đều đảm bảo kết quả không âm ($0 \le \text{kết quả} \le 99$) để bé thao tác chính xác trên bàn tính ảo.
+> **Lưu ý nghiệp vụ:** Toàn bộ hệ thống được thiết kế **chỉ giới hạn ở phép Cộng và phép Trừ** (phù hợp với lứa tuổi 4–6 tuổi). Tuyệt đối không sinh phép nhân hay chia. Mọi phép toán đều đảm bảo kết quả không âm ($0 \le \text{kết quả} \le 99$) để bé thao tác chính xác trên 2 bàn tay Finger Math.
 
 Để 4 thành viên phát triển độc lập không bị xung đột, các lớp dữ liệu cốt lõi được định nghĩa sẵn trong `lib/shared/entities/`:
 
