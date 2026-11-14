@@ -6,9 +6,9 @@ import '../../../../injection_container.dart';
 import '../../../../shared/entities/attempt_log.dart';
 import '../../../../shared/entities/soroban_question.dart';
 import '../../../../shared/widgets/mascot_bubble.dart';
+import 'package:soroban_kids_app/features/1_abacus_engine/domain/entities/finger_hand_state.dart';
 import 'package:soroban_kids_app/features/1_abacus_engine/presentation/controllers/finger_math_controller.dart';
 import 'package:soroban_kids_app/features/1_abacus_engine/presentation/widgets/finger_math_board_widget.dart';
-import 'package:soroban_kids_app/features/4_ai_voice_tutor/domain/engine/adaptive_tutor_engine.dart';
 import 'package:soroban_kids_app/features/4_ai_voice_tutor/presentation/widgets/voice_answer_mic_button.dart';
 import 'package:soroban_kids_app/features/3_lessons_flash_anzan/domain/question_generator.dart';
 
@@ -533,5 +533,4 @@ class _LessonPlayScreenState extends State<LessonPlayScreen> {
       ),
     );
   }
-}
 }
