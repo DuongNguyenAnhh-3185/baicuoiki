@@ -63,20 +63,25 @@ class _LessonPlayScreenState extends State<LessonPlayScreen> {
 
   String _getFingerMathFormulaHint(SorobanQuestion q) {
     if (q.level == 1) {
-      return 'Bung các ngón tay theo từng số đếm nhé!';
+      return 'Bung các ngón tay trên Tay Phải (đơn vị: 0-9) theo từng số nhé!';
     }
-    // Cấp độ 2: Công thức Anh Bạn Nhỏ (với ngón cái 5)
+    // Cấp độ 2 & 3: Công thức Anh Bạn Nhỏ & Anh Bạn Lớn
     for (final op in q.operands) {
-      if (op == 4) return 'Công thức Anh bạn nhỏ: +4 = +5 - 1 (Xòe anh béo 5, cụp 1 ngón dài)';
-      if (op == 3) return 'Công thức Anh bạn nhỏ: +3 = +5 - 2 (Xòe anh béo 5, cụp 2 ngón dài)';
-      if (op == 2) return 'Công thức Anh bạn nhỏ: +2 = +5 - 3 (Xòe anh béo 5, cụp 3 ngón dài)';
-      if (op == 1) return 'Công thức Anh bạn nhỏ: +1 = +5 - 4 (Xòe anh béo 5, cụp 4 ngón dài)';
-      if (op == -1) return 'Công thức Anh bạn nhỏ: -1 = -5 + 4 (Cụp anh béo 5, xòe 4 ngón dài)';
-      if (op == -2) return 'Công thức Anh bạn nhỏ: -2 = -5 + 3 (Cụp anh béo 5, xòe 3 ngón dài)';
-      if (op == -3) return 'Công thức Anh bạn nhỏ: -3 = -5 + 2 (Cụp anh béo 5, xòe 2 ngón dài)';
-      if (op == -4) return 'Công thức Anh bạn nhỏ: -4 = -5 + 1 (Cụp anh béo 5, xòe 1 ngón dài)';
+      if (op == 9) return 'Anh Bạn Lớn (+9 = +10 - 1): Bung 1 ngón Tay Trái (+10), gập 1 ngón Tay Phải (-1)';
+      if (op == 8) return 'Anh Bạn Lớn (+8 = +10 - 2): Bung 1 ngón Tay Trái (+10), gập 2 ngón Tay Phải (-2)';
+      if (op == 7) return 'Anh Bạn Lớn (+7 = +10 - 3): Bung 1 ngón Tay Trái (+10), gập 3 ngón Tay Phải (-3)';
+      if (op == 6) return 'Anh Bạn Lớn (+6 = +10 - 4): Bung 1 ngón Tay Trái (+10), gập 4 ngón Tay Phải (-4)';
+      if (op == 4) return 'Anh Bạn Nhỏ (+4 = +5 - 1): Tay Phải xòe ngón cái (5), gập 1 ngón dài';
+      if (op == 3) return 'Anh Bạn Nhỏ (+3 = +5 - 2): Tay Phải xòe ngón cái (5), gập 2 ngón dài';
+      if (op == 2) return 'Anh Bạn Nhỏ (+2 = +5 - 3): Tay Phải xòe ngón cái (5), gập 3 ngón dài';
+      if (op == 1) return 'Anh Bạn Nhỏ (+1 = +5 - 4): Tay Phải xòe ngón cái (5), gập 4 ngón dài';
+      if (op == -1) return 'Anh Bạn Nhỏ (-1 = -5 + 4): Tay Phải gập ngón cái (5), bung 4 ngón dài';
+      if (op == -2) return 'Anh Bạn Nhỏ (-2 = -5 + 3): Tay Phải gập ngón cái (5), bung 3 ngón dài';
+      if (op == -3) return 'Anh Bạn Nhỏ (-3 = -5 + 2): Tay Phải gập ngón cái (5), bung 2 ngón dài';
+      if (op == -4) return 'Anh Bạn Nhỏ (-4 = -5 + 1): Tay Phải gập ngón cái (5), bung 1 ngón dài';
+      if (op == -9) return 'Anh Bạn Lớn (-9 = -10 + 1): Gập 1 ngón Tay Trái (-10), bung 1 ngón Tay Phải (+1)';
     }
-    return 'Áp dụng công thức ngón tay để tính nhanh nhé!';
+    return 'Áp dụng công thức ngón tay Tay Trái và Tay Phải để tính nhanh nhé!';
   }
 
   Future<void> _checkAnswer(int answer, String answeredVia) async {

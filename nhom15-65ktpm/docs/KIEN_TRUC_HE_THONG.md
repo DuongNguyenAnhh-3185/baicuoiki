@@ -90,44 +90,67 @@ graph TD
 
 ## 3. Kiến Trúc Đồ Họa Tương Tác Finger Math (Finger Math Engine)
 
-Hệ thống mô phỏng trực quan chuẩn quốc tế **Flash Card 1D (Right Hand - Hàng đơn vị & Left Hand - Hàng chục)** giúp trẻ 4–6 tuổi ghi nhớ và thao tác số học thông qua chính đôi bàn tay:
+Hệ thống mô phỏng trực quan theo quy ước **Hai Bàn Tay (Tay Phải - Hàng đơn vị & Tay Trái - Hàng chục)**, không dùng các tên lóng/biệt danh tùy tiện, giúp trẻ 4–6 tuổi nắm vững bản chất toán học:
 
-### 3.1. Bảng mã hóa số trên bàn tay (0 đến 9)
-- **Số 0 (Cái Búa ✊):** Toàn bộ 5 ngón gập lại thành nắm đấm.
-- **Số 1 (Cây Nến ☝️):** Bung 1 ngón trỏ.
-- **Số 2 (Tai Thỏ ✌️):** Bung 2 ngón (trỏ + giữa).
-- **Số 3 (Cái Nĩa 🤟):** Bung 3 ngón (trỏ + giữa + áp út).
-- **Số 4 (Cái Quạt ✋):** Bung 4 ngón dài, ngón cái cụp.
-- **Số 5 (Anh Béo 👍):** **Ngón cái xòe ra (giá trị = 5)**, 4 ngón dài cụp lại.
-- **Số 6 (Súng Nhỏ 🔫):** Ngón cái (5) + 1 ngón trỏ (1) = 6.
-- **Số 7 (Súng Lớn 👈):** Ngón cái (5) + 2 ngón (2) = 7.
-- **Số 8 (Cua Kẹp 🦀):** Ngón cái (5) + 3 ngón (3) = 8.
-- **Số 9 (Bàn Tay Xòe 🖐️):** Bung toàn bộ 5 ngón (5 + 4 = 9).
+### 3.1. Quy ước Bàn Tay Phải (Hàng đơn vị: 0 đến 9)
+- **Số 0:** Tay phải nắm lại (0 ngón bung).
+- **Số 1:** Tay phải bung 1 ngón trỏ (giá trị = 1).
+- **Số 2:** Tay phải bung 2 ngón (trỏ + giữa) (giá trị = 2).
+- **Số 3:** Tay phải bung 3 ngón (trỏ + giữa + áp út) (giá trị = 3).
+- **Số 4:** Tay phải bung 4 ngón dài (trỏ, giữa, áp út, út), ngón cái gập (giá trị = 4).
+- **Số 5:** Tay phải bung **ngón cái (giá trị = 5)**, 4 ngón dài gập lại.
+- **Số 6:** Tay phải bung **ngón cái (5) + 1 ngón trỏ (1)** $\rightarrow 5 + 1 = 6$.
+- **Số 7:** Tay phải bung **ngón cái (5) + 2 ngón (trỏ + giữa)** $\rightarrow 5 + 2 = 7$.
+- **Số 8:** Tay phải bung **ngón cái (5) + 3 ngón dài** $\rightarrow 5 + 3 = 8$.
+- **Số 9:** Tay phải bung toàn bộ **5 ngón** $\rightarrow 5 + 4 = 9$.
 
-### 3.2. Cơ chế 2 bàn tay tính toán phạm vi 0 đến 99
-- **Tay Phải (Right Hand - RH):** Đảm nhiệm hàng đơn vị ($0 \dots 9$).
-- **Tay Trái (Left Hand - LH):** Đảm nhiệm hàng chục ($00, 10, 20 \dots 90$).
-- Ví dụ: Số `37` = Tay trái giơ 3 ngón (30) + Tay phải giơ súng lớn (7).
+### 3.2. Quy ước Bàn Tay Trái (Hàng chục: 10 đến 90)
+- **Số 0 (tròn chục):** Tay trái nắm lại.
+- **Số 10:** Tay trái bung 1 ngón trỏ (giá trị = 10).
+- **Số 20:** Tay trái bung 2 ngón dài (giá trị = 20).
+- **Số 30:** Tay trái bung 3 ngón dài (giá trị = 30).
+- **Số 40:** Tay trái bung 4 ngón dài (giá trị = 40).
+- **Số 50:** Tay trái bung **ngón cái (giá trị = 50)**, 4 ngón dài gập.
+- **Số 60:** Tay trái bung **ngón cái (50) + 1 ngón trỏ (10)** $\rightarrow 50 + 10 = 60$.
+- **Số 70:** Tay trái bung **ngón cái (50) + 2 ngón dài (20)** $\rightarrow 50 + 20 = 70$.
+- **Số 80:** Tay trái bung **ngón cái (50) + 3 ngón dài (30)** $\rightarrow 50 + 30 = 80$.
+- **Số 90:** Tay trái bung toàn bộ **5 ngón** $\rightarrow 50 + 40 = 90$.
 
-### 3.3. Hiện thực hóa các công thức toán tư duy
-#### a. Công thức Anh Bạn Nhỏ (Cặp số có tổng bằng 5: 1-4, 2-3)
-- Phép cộng (+1, +2, +3, +4): Khi không đủ ngón dài để xòe $\rightarrow$ Xòe ngón cái (Anh béo +5) và gập các ngón thừa:
-  - $+4 = +5 - 1$ (Xòe anh béo 5, cụp 1 ngón dài)
-  - $+3 = +5 - 2$ (Xòe anh béo 5, cụp 2 ngón dài)
-  - $+2 = +5 - 3$ (Xòe anh béo 5, cụp 3 ngón dài)
-  - $+1 = +5 - 4$ (Xòe anh béo 5, cụp 4 ngón dài)
-- Phép trừ (-1, -2, -3, -4): Khi không đủ ngón dài để gập $\rightarrow$ Gập ngón cái (Anh béo -5) và xòe các ngón tương ứng:
-  - $-1 = -5 + 4$ (Cụp anh béo 5, xòe 4 ngón dài)
-  - $-2 = -5 + 3$ (Cụp anh béo 5, xòe 3 ngón dài)
-  - $-3 = -5 + 2$ (Cụp anh béo 5, xòe 2 ngón dài)
-  - $-4 = -5 + 1$ (Cụp anh béo 5, xòe 1 ngón dài)
+### 3.3. Phối hợp 2 bàn tay biểu diễn số 2 chữ số (10 đến 99)
+- **Nguyên tắc:** `Giá trị = (Tay Trái × 10) + (Tay Phải × 1)`
+- **Ví dụ:**
+  - Số `37` = Tay Trái giơ 3 ngón dài (30) + Tay Phải giơ ngón cái và 2 ngón dài (7).
+  - Số `68` = Tay Trái giơ ngón cái và 1 ngón dài (60) + Tay Phải giơ ngón cái và 3 ngón dài (8).
+  - Số `99` = Toàn bộ 10 ngón tay của cả 2 bàn tay đều xòe.
 
-#### b. Công thức Anh Bạn Lớn (Cặp số có tổng bằng 10: 9-1, 8-2, 7-3,...)
-- Phép cộng qua 10 (+9, +8, +7,...): Khi tay phải hết ngón $\rightarrow$ Bung 1 ngón tay trái (hàng chục +10) và cụp anh bạn lớn ở tay phải:
-  - $+9 = +10 - 1$ (Tay trái +1, tay phải -1)
-  - $+8 = +10 - 2$ (Tay trái +1, tay phải -2)
-  - $+7 = +10 - 3$ (Tay trái +1, tay phải -3)
-- Phép trừ qua 10: Gập 1 ngón tay trái (-10) và xòe anh bạn lớn ở tay phải.
+### 3.4. Áp dụng các công thức Toán tư duy Finger Math
+#### a. Công thức Anh Bạn Nhỏ (Cặp số có tổng bằng 5: 1-4, 2-3, 3-2, 4-1)
+Áp dụng khi cộng/trừ trong phạm vi 5 trên cùng một bàn tay (hàng đơn vị ở Tay Phải hoặc hàng chục ở Tay Trái) khi không đủ ngón dài rời rạc:
+- **Phép cộng (+): Thêm ngón cái (5), gập bớt ngón bạn nhỏ:**
+  - $+4 = +5 - 1$ (Xòe ngón cái 5, gập 1 ngón dài)
+  - $+3 = +5 - 2$ (Xòe ngón cái 5, gập 2 ngón dài)
+  - $+2 = +5 - 3$ (Xòe ngón cái 5, gập 3 ngón dài)
+  - $+1 = +5 - 4$ (Xòe ngón cái 5, gập 4 ngón dài)
+- **Phép trừ (-): Gập bớt ngón cái (5), bung thêm ngón bạn nhỏ:**
+  - $-4 = -5 + 1$ (Gập ngón cái 5, bung 1 ngón dài)
+  - $-3 = -5 + 2$ (Gập ngón cái 5, bung 2 ngón dài)
+  - $-2 = -5 + 3$ (Gập ngón cái 5, bung 3 ngón dài)
+  - $-1 = -5 + 4$ (Gập ngón cái 5, bung 4 ngón dài)
+
+#### b. Công thức Anh Bạn Lớn (Cặp số có tổng bằng 10: 9-1, 8-2, 7-3, 6-4, 5-5)
+Áp dụng khi cộng/trừ chuyển giao giữa Tay Phải (hàng đơn vị) và Tay Trái (hàng chục):
+- **Phép cộng qua 10 (+): Bung 1 ngón ở Tay Trái (+10), gập bớt ngón bạn lớn ở Tay Phải (- bạn lớn):**
+  - $+9 = +10 \text{ (Tay Trái)} - 1 \text{ (Tay Phải)}$
+  - $+8 = +10 \text{ (Tay Trái)} - 2 \text{ (Tay Phải)}$
+  - $+7 = +10 \text{ (Tay Trái)} - 3 \text{ (Tay Phải)}$
+  - $+6 = +10 \text{ (Tay Trái)} - 4 \text{ (Tay Phải)}$
+  - $+5 = +10 \text{ (Tay Trái)} - 5 \text{ (Tay Phải)}$
+- **Phép trừ qua 10 (-): Gập 1 ngón ở Tay Trái (-10), bung thêm ngón bạn lớn ở Tay Phải (+ bạn lớn):**
+  - $-9 = -10 \text{ (Tay Trái)} + 1 \text{ (Tay Phải)}$
+  - $-8 = -10 \text{ (Tay Trái)} + 2 \text{ (Tay Phải)}$
+  - $-7 = -10 \text{ (Tay Trái)} + 3 \text{ (Tay Phải)}$
+  - $-6 = -10 \text{ (Tay Trái)} + 4 \text{ (Tay Phải)}$
+  - $-5 = -10 \text{ (Tay Trái)} + 5 \text{ (Tay Phải)}$
 
 ---
 

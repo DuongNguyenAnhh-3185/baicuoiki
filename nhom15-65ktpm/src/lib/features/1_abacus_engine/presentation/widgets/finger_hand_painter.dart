@@ -18,7 +18,7 @@ class FingerHandPainter extends CustomPainter {
 
     final isRight = handState.handType == HandType.rightHand;
 
-    // Màu sắc da hoạt hình dễ thương
+    // Màu sắc da hoạt hình
     const skinColor = Color(0xFFFFDFBA);
     final outlinePaint = Paint()
       ..color = const Color(0xFF3E2723)
@@ -107,6 +107,25 @@ class FingerHandPainter extends CustomPainter {
           Offset(fingerX + fingerWidth * 0.3, foldY2),
           foldPaint,
         );
+
+        // Nhãn giá trị ngón tay: '1' ở Tay Phải, '10' ở Tay Trái
+        final label = isRight ? '1' : '10';
+        final textSpan = TextSpan(
+          text: label,
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: isRight ? fingerWidth * 0.55 : fingerWidth * 0.42,
+            fontWeight: FontWeight.w900,
+          ),
+        );
+        final textPainter = TextPainter(
+          text: textSpan,
+          textDirection: TextDirection.ltr,
+        )..layout();
+        textPainter.paint(
+          canvas,
+          Offset(fingerX - textPainter.width / 2, fingerTopY + fingerLength * 0.12),
+        );
       }
     }
 
@@ -130,11 +149,11 @@ class FingerHandPainter extends CustomPainter {
     canvas.drawRRect(palmRRect, skinPaint);
     canvas.drawRRect(palmRRect, outlinePaint);
 
-    // 3. Vẽ Ngón cái (Thumb - Anh béo = 5)
+    // 3. Vẽ Ngón cái (Thumb - 5 ở tay phải, 50 ở tay trái)
     // Tay phải: Ngón cái chìa sang bên trái
     // Tay trái: Ngón cái chìa sang bên phải
     final thumbIsExtended = handState.isThumbExtended;
-    final thumbWidth = fingerWidth * 1.15;
+    final thumbWidth = fingerWidth * 1.18;
     final thumbLength = thumbIsExtended ? h * 0.28 : h * 0.14;
 
     final thumbCenterX = isRight
@@ -173,13 +192,14 @@ class FingerHandPainter extends CustomPainter {
     );
     canvas.drawRRect(thumbRRect, outlinePaint);
 
-    // Nhãn '5' nhỏ xinh trên ngón cái khi xòe
+    // Nhãn '5' trên Tay Phải hoặc '50' trên Tay Trái khi ngón cái xòe
     if (thumbIsExtended) {
+      final thumbText = isRight ? '5' : '50';
       final textSpan = TextSpan(
-        text: '5',
+        text: thumbText,
         style: TextStyle(
           color: Colors.white,
-          fontSize: thumbWidth * 0.65,
+          fontSize: isRight ? thumbWidth * 0.65 : thumbWidth * 0.50,
           fontWeight: FontWeight.w900,
         ),
       );

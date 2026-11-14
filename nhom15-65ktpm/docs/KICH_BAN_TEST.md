@@ -42,10 +42,11 @@ Nhóm: **Nhóm 15 - Lớp 65KTPM**
 ### 2.4. Kiểm thử Bàn tay Finger Math (`finger_math_engine_test.dart`)
 | Mã Test | Mô Tả Kịch Bản | Thao Tác Ngón Tay | Kết Quả Mong Đợi | Trạng Thái |
 | :---: | :--- | :--- | :--- | :---: |
-| **TC_FM_01** | 10 số chuẩn Flashcard RH (0 - 9) | Khởi tạo từ 0 đến 9 | Đúng số ngón xòe và tên hoạt hình (Cái búa, Cây nến, Tai thỏ, Anh béo, Súng nhỏ,...) | Pass |
-| **TC_FM_02** | Phối hợp 2 bàn tay (0 - 99) | Tay trái = 3, Tay phải = 7 | Tổng giá trị = 37 (trái: hàng chục, phải: hàng đơn vị) | Pass |
-| **TC_FM_03** | Công thức Anh Bạn Nhỏ | $+4 = +5 - 1$ và $-1 = -5 + 4$ | Xòe anh béo 5 cụp 1 ngón $\rightarrow$ 5; Cụp anh béo xòe 4 ngón $\rightarrow$ 4 | Pass |
-| **TC_FM_04** | Công thức Anh Bạn Lớn | $+9 = +10 - 1$ | Bung 1 ngón tay trái (+10), cụp 1 ngón tay phải (-1) $\rightarrow$ 12 | Pass |
+| **TC_FM_01** | Quy ước 10 số Tay Phải (Hàng đơn vị 0 - 9) | Khởi tạo từ 0 đến 9 | Đúng số ngón xòe và mô tả chuẩn (0: Nắm tay, 5: Ngón cái, 6: Cái + 1,...) | Pass |
+| **TC_FM_02** | Quy ước Tay Trái (Hàng chục 10 - 90) | Khởi tạo từ 10 đến 90 | Đúng số ngón xòe và mô tả hàng chục (10: 1 ngón, 50: ngón cái, 60: cái + 1,...) | Pass |
+| **TC_FM_03** | Phối hợp 2 bàn tay (0 - 99) | Tay trái = 3 (30), Tay phải = 7 (7) | Tổng giá trị = 37 (trái: hàng chục, phải: hàng đơn vị) | Pass |
+| **TC_FM_04** | Công thức Anh Bạn Nhỏ (tổng = 5) | $+4 = +5 - 1$ và $-1 = -5 + 4$ | Xòe ngón cái 5 cụp 1 ngón $\rightarrow$ 5; Cụp ngón cái xòe 4 ngón $\rightarrow$ 4 | Pass |
+| **TC_FM_05** | Công thức Anh Bạn Lớn (tổng = 10, phối hợp 2 tay) | $6 + 7 = 13$ (+10 tay trái, -3 tay phải) | Bung 1 ngón tay trái (+10), gập 3 ngón tay phải (-3) $\rightarrow$ 13 | Pass |
 
 ---
 
@@ -54,4 +55,4 @@ Nhóm: **Nhóm 15 - Lớp 65KTPM**
 cd nhom15-65ktpm/src
 flutter test
 ```
-Tất cả 21 ca kiểm thử trên được cài đặt sẵn tại thư mục `test/` và đạt tỷ lệ vượt qua 100%.
+Tất cả 22 ca kiểm thử trên được cài đặt sẵn tại thư mục `test/` và đạt tỷ lệ vượt qua 100%.

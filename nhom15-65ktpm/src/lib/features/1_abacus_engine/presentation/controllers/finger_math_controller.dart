@@ -1,10 +1,11 @@
 import 'package:flutter/foundation.dart';
 import '../../domain/entities/finger_hand_state.dart';
 
+/// Bộ điều khiển 2 bàn tay Finger Math (Tay Phải: 0..9, Tay Trái: 0..90)
 class FingerMathController extends ChangeNotifier {
   FingerHandState _rightHand = const FingerHandState(handType: HandType.rightHand);
   FingerHandState _leftHand = const FingerHandState(handType: HandType.leftHand);
-  final bool showLeftHand; // true: hiển thị cả 2 bàn tay (0..99), false: chỉ hiển thị tay phải (0..9)
+  final bool showLeftHand; // true: hiển thị 2 bàn tay (0..99), false: chỉ hiển thị tay phải (0..9)
   VoidCallback? onHandChanged;
 
   FingerMathController({
@@ -21,6 +22,19 @@ class FingerMathController extends ChangeNotifier {
       return _rightHand.digitValue;
     }
     return (_leftHand.digitValue * 10) + _rightHand.digitValue;
+  }
+
+  /// Mô tả trạng thái 2 bàn tay bằng lời nói tiếng Việt chuẩn cho trợ lý giọng nói
+  String get speechDescription {
+    final rightVal = _rightHand.digitValue;
+    final leftVal = _leftHand.digitValue;
+
+    if (!showLeftHand || leftVal == 0) {
+      if (rightVal == 0) return 'Tay phải nắm tay, bằng 0';
+      return '${_rightHand.fingerDescription}, bằng $rightVal';
+    }
+
+    return 'Tay trái $leftVal chục, tay phải $rightVal đơn vị. Tổng là $totalValue';
   }
 
   void reset() {

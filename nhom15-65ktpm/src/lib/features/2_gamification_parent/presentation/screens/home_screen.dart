@@ -82,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 8),
               const Text(
-                'Bé chạm vào ngón cái (Anh béo = 5) và các ngón dài để bung ngón tay nhé!',
+                'Bé chạm vào các ngón trên Tay Phải (đơn vị: 0-9) và Tay Trái (hàng chục: 10-90) nhé!',
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 14, color: AppColors.textLight),
               ),
@@ -96,10 +96,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               ElevatedButton.icon(
                 onPressed: () {
-                  final val = controller.totalValue;
-                  final alias = controller.rightHand.cartoonAlias;
                   _audioService.speak(
-                    'Số hiện tại là $val, $alias',
+                    controller.speechDescription,
                   );
                 },
                 icon: const Icon(Icons.volume_up, size: 24),
