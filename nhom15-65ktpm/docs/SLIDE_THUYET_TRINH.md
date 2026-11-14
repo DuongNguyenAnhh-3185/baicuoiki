@@ -12,8 +12,8 @@
 ---
 
 ### SLIDE 1: TRANG TIÊU ĐỀ (TITLE SLIDE)
-- **Tiêu đề chính:** SOROBAN KIDS APP
-- **Tiêu đề phụ:** Ứng dụng học toán Soroban & Finger Math tương tác hai bàn tay kết hợp AI trợ lý giọng nói tiếng Việt cho trẻ 4–6 tuổi.
+- **Tiêu đề chính:** Finger Math APP
+- **Tiêu đề phụ:** Ứng dụng học toán Finger Math tương tác hai bàn tay kết hợp AI trợ lý giọng nói tiếng Việt cho trẻ 4–6 tuổi.
 - **Thông tin báo cáo:**
   - Giảng viên hướng dẫn: **Thầy Đỗ Oanh Cường**
   - Lớp học phần: **65KTPM**

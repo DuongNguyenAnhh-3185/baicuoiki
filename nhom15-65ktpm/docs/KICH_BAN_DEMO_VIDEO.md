@@ -1,7 +1,7 @@
 # Kịch Bản Quay Video Demo Đồ Án (Video Demonstration Script)
 
 - **Học phần:** Phát Triển Ứng Dụng Di Động (PTUDDD) - Lớp 65KTPM
-- **Đề tài:** Ứng dụng học toán Soroban & Finger Math tương tác 2 bàn tay rèn luyện tư duy cho trẻ 4-6 tuổi kết hợp AI trợ lý giọng nói (Soroban Kids App)
+- **Đề tài:** Ứng dụng học toán Finger Math tương tác 2 bàn tay rèn luyện tư duy cho trẻ 4-6 tuổi kết hợp AI trợ lý giọng nói (Soroban Kids App)
 - **Giảng viên hướng dẫn:** Thầy Đỗ Oanh Cường
 - **Nhóm thực hiện:** Nhóm 15 (Dương Nguyên Anh, Phạm Duy Thái, Nguyễn Thị Thu Hoài, Nguyễn Thị Cẩm Ly)
 - **Thời lượng khuyến nghị:** 4 - 5 phút

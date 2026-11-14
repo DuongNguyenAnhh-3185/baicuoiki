@@ -4,8 +4,8 @@ import '../../../../core/services/audio_service.dart';
 import '../../../../injection_container.dart';
 import '../../domain/entities/finger_hand_state.dart';
 import '../controllers/finger_math_controller.dart';
-import 'finger_hand_painter.dart';
 
+/// Widget bàn tay Finger Math hiển thị hình ảnh thẻ bài Flashcard trực quan (0..9)
 class FingerMathBoardWidget extends StatefulWidget {
   final FingerMathController controller;
   final double height;
@@ -14,7 +14,7 @@ class FingerMathBoardWidget extends StatefulWidget {
   const FingerMathBoardWidget({
     super.key,
     required this.controller,
-    this.height = 230.0,
+    this.height = 250.0,
     this.showLiveValue = true,
   });
 
@@ -25,28 +25,31 @@ class FingerMathBoardWidget extends StatefulWidget {
 class _FingerMathBoardWidgetState extends State<FingerMathBoardWidget> {
   final AudioService _audioService = sl<AudioService>();
 
-  void _handleHandTap(TapUpDetails details, Size size, HandType handType) {
-    final pos = details.localPosition;
+  void _cycleNextDigit(HandType handType) {
     _audioService.playBeadClick();
+    final current = handType == HandType.rightHand
+        ? widget.controller.rightHand.digitValue
+        : widget.controller.leftHand.digitValue;
+    final next = (current + 1) % 10;
+    _setDigit(handType, next);
+  }
 
-    final isRight = handType == HandType.rightHand;
-    final thumbZoneX = isRight ? size.width * 0.35 : size.width * 0.65;
+  void _setDigit(HandType handType, int value) {
+    _audioService.playBeadClick();
+    final clamped = value.clamp(0, 9);
+    final thumb = clamped >= 5;
+    final fingers = clamped % 5;
 
-    // Chạm vào vùng ngón cái
-    if (isRight ? (pos.dx < thumbZoneX) : (pos.dx > thumbZoneX)) {
-      widget.controller.toggleThumb(handType);
-    } else {
-      // Chạm vào vùng 4 ngón dài
-      final fingerZoneWidth = size.width * 0.55;
-      final startX = isRight ? size.width * 0.35 : size.width * 0.1;
-      final relativeX = (pos.dx - startX).clamp(0.0, fingerZoneWidth);
-      final fraction = relativeX / fingerZoneWidth;
-
-      int selectedCount = ((fraction * 4).floor() + 1).clamp(1, 4);
-      if (!isRight) {
-        selectedCount = 5 - selectedCount;
+    if (handType == HandType.rightHand) {
+      if (widget.controller.rightHand.isThumbExtended != thumb) {
+        widget.controller.toggleThumb(HandType.rightHand);
       }
-      widget.controller.setExtendedFingers(handType, selectedCount);
+      widget.controller.setExtendedFingers(HandType.rightHand, fingers);
+    } else {
+      if (widget.controller.leftHand.isThumbExtended != thumb) {
+        widget.controller.toggleThumb(HandType.leftHand);
+      }
+      widget.controller.setExtendedFingers(HandType.leftHand, fingers);
     }
   }
 
@@ -60,7 +63,7 @@ class _FingerMathBoardWidgetState extends State<FingerMathBoardWidget> {
       ),
       builder: (context) {
         return DraggableScrollableSheet(
-          initialChildSize: 0.75,
+          initialChildSize: 0.85,
           minChildSize: 0.5,
           maxChildSize: 0.95,
           expand: false,
@@ -83,7 +86,7 @@ class _FingerMathBoardWidgetState extends State<FingerMathBoardWidget> {
                     ),
                   ),
                   const Text(
-                    '📖 Quy Ước 2 Bàn Tay & Bảng Công Thức',
+                    '📖 Flashcard 1D & Bảng Công Thức Finger Math',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w900,
@@ -91,6 +94,22 @@ class _FingerMathBoardWidgetState extends State<FingerMathBoardWidget> {
                     ),
                   ),
                   const SizedBox(height: 12),
+                  // Ảnh gốc Flashcard 1D (RH) KiddiMath chuẩn trực quan
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: Image.asset(
+                      'assets/images/finger_cards/flashcard_full_1d_rh.png',
+                      fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          padding: const EdgeInsets.all(16),
+                          color: Colors.orange.shade50,
+                          child: const Text('Hình ảnh Flashcard 1D chuẩn KiddiMath'),
+                        );
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 16),
                   const Text(
                     '1. Quy ước 2 bàn tay (0 đến 99):',
                     style: TextStyle(
@@ -198,6 +217,147 @@ class _FingerMathBoardWidgetState extends State<FingerMathBoardWidget> {
     );
   }
 
+  Widget _buildHandCardView({
+    required FingerHandState handState,
+    required HandType handType,
+  }) {
+    final isRight = handType == HandType.rightHand;
+    final digit = handState.digitValue;
+    final displayValue = handState.actualValue;
+    final assetPath = 'assets/images/finger_cards/hand_$digit.png';
+
+    return Column(
+      children: [
+        // Nhãn tiêu đề bàn tay
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+          decoration: BoxDecoration(
+            color: isRight
+                ? AppColors.secondary.withOpacity(0.2)
+                : AppColors.accentYellow.withOpacity(0.35),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Text(
+            isRight
+                ? 'TAY PHẢI (ĐƠN VỊ: $displayValue)'
+                : 'TAY TRÁI (HÀNG CHỤC: $displayValue)',
+            style: const TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.bold,
+              color: AppColors.textDark,
+            ),
+          ),
+        ),
+        const SizedBox(height: 4),
+
+        // Thẻ hình ảnh Flashcard (chạm để đổi số hoặc xem)
+        Expanded(
+          child: GestureDetector(
+            onTap: () => _cycleNextDigit(handType),
+            child: Container(
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: isRight ? AppColors.secondary : AppColors.accentOrange,
+                  width: 2,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.06),
+                    blurRadius: 8,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  // Nếu là tay trái thì lật gương hình ảnh ngang để ngón cái ở bên phải
+                  Transform.flip(
+                    flipX: !isRight,
+                    child: Image.asset(
+                      assetPath,
+                      fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Center(
+                          child: Text(
+                            '$digit',
+                            style: const TextStyle(
+                              fontSize: 48,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.primary,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 2,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.7),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        '$displayValue',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+
+        const SizedBox(height: 6),
+        // Bộ nút chọn nhanh số (0 đến 9) cho bé bấm
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(10, (idx) {
+              final isSelected = digit == idx;
+              final label = isRight ? '$idx' : '${idx * 10}';
+              return GestureDetector(
+                onTap: () => _setDigit(handType, idx),
+                child: Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 2),
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: isSelected
+                        ? (isRight ? AppColors.secondary : AppColors.accentOrange)
+                        : Colors.grey.shade100,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: isSelected ? Colors.transparent : Colors.grey.shade300,
+                    ),
+                  ),
+                  child: Text(
+                    label,
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: isSelected ? FontWeight.w900 : FontWeight.w600,
+                      color: isSelected ? Colors.white : AppColors.textDark,
+                    ),
+                  ),
+                ),
+              );
+            }),
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
@@ -262,7 +422,7 @@ class _FingerMathBoardWidgetState extends State<FingerMathBoardWidget> {
                     Row(
                       children: [
                         IconButton(
-                          tooltip: 'Xem quy ước & công thức',
+                          tooltip: 'Xem Flashcard 1D & công thức',
                           onPressed: () => _showFormulaGuideModal(context),
                           icon: const Icon(
                             Icons.help_outline_rounded,
@@ -296,7 +456,7 @@ class _FingerMathBoardWidgetState extends State<FingerMathBoardWidget> {
                 ),
               ),
 
-            // Khu vực hiển thị 2 bàn tay tương tác
+            // Khu vực hiển thị 2 bàn tay tương tác Flashcard
             Container(
               height: widget.height,
               margin: const EdgeInsets.symmetric(horizontal: 12),
@@ -317,50 +477,9 @@ class _FingerMathBoardWidgetState extends State<FingerMathBoardWidget> {
                   // Tay trái: Hàng chục (10..90)
                   if (widget.controller.showLeftHand)
                     Expanded(
-                      child: Column(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 2,
-                            ),
-                            decoration: BoxDecoration(
-                              color: AppColors.accentYellow.withOpacity(0.35),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              'TAY TRÁI (HÀNG CHỤC: ${leftHand.actualValue})',
-                              style: const TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.textDark,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: LayoutBuilder(
-                              builder: (context, constraints) {
-                                final size = Size(
-                                  constraints.maxWidth,
-                                  constraints.maxHeight,
-                                );
-                                return GestureDetector(
-                                  onTapUp: (details) => _handleHandTap(
-                                    details,
-                                    size,
-                                    HandType.leftHand,
-                                  ),
-                                  child: CustomPaint(
-                                    size: size,
-                                    painter: FingerHandPainter(
-                                      handState: leftHand,
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ],
+                      child: _buildHandCardView(
+                        handState: leftHand,
+                        handType: HandType.leftHand,
                       ),
                     ),
 
@@ -373,50 +492,9 @@ class _FingerMathBoardWidgetState extends State<FingerMathBoardWidget> {
 
                   // Tay phải: Hàng đơn vị (0..9)
                   Expanded(
-                    child: Column(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 2,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColors.secondary.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Text(
-                            'TAY PHẢI (HÀNG ĐƠN VỊ: ${rightHand.actualValue})',
-                            style: const TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.textDark,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: LayoutBuilder(
-                            builder: (context, constraints) {
-                              final size = Size(
-                                constraints.maxWidth,
-                                constraints.maxHeight,
-                              );
-                              return GestureDetector(
-                                onTapUp: (details) => _handleHandTap(
-                                  details,
-                                  size,
-                                  HandType.rightHand,
-                                ),
-                                child: CustomPaint(
-                                  size: size,
-                                  painter: FingerHandPainter(
-                                    handState: rightHand,
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      ],
+                    child: _buildHandCardView(
+                      handState: rightHand,
+                      handType: HandType.rightHand,
                     ),
                   ),
                 ],
