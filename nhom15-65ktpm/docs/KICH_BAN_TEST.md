@@ -39,6 +39,14 @@ Nhóm: **Nhóm 15 - Lớp 65KTPM**
 | **TC_AI_02** | Bé làm sai nhiều và mất bình tĩnh | 1/5 câu đúng, thời gian TB = 6.5s | Kích hoạt chế độ hướng dẫn thị phạm từng bước (Guided Highlight) | Pass |
 | **TC_AI_03** | Bé duy trì phong độ ổn định | 4/5 câu đúng, thời gian TB = 3.0s | Giữ nguyên độ khó hiện tại và phát lời khen động viên | Pass |
 
+### 2.4. Kiểm thử Bàn tay Finger Math (`finger_math_engine_test.dart`)
+| Mã Test | Mô Tả Kịch Bản | Thao Tác Ngón Tay | Kết Quả Mong Đợi | Trạng Thái |
+| :---: | :--- | :--- | :--- | :---: |
+| **TC_FM_01** | 10 số chuẩn Flashcard RH (0 - 9) | Khởi tạo từ 0 đến 9 | Đúng số ngón xòe và tên hoạt hình (Cái búa, Cây nến, Tai thỏ, Anh béo, Súng nhỏ,...) | Pass |
+| **TC_FM_02** | Phối hợp 2 bàn tay (0 - 99) | Tay trái = 3, Tay phải = 7 | Tổng giá trị = 37 (trái: hàng chục, phải: hàng đơn vị) | Pass |
+| **TC_FM_03** | Công thức Anh Bạn Nhỏ | $+4 = +5 - 1$ và $-1 = -5 + 4$ | Xòe anh béo 5 cụp 1 ngón $\rightarrow$ 5; Cụp anh béo xòe 4 ngón $\rightarrow$ 4 | Pass |
+| **TC_FM_04** | Công thức Anh Bạn Lớn | $+9 = +10 - 1$ | Bung 1 ngón tay trái (+10), cụp 1 ngón tay phải (-1) $\rightarrow$ 12 | Pass |
+
 ---
 
 ## 3. Lệnh Thực Thi Bộ Kiểm Thử
@@ -46,4 +54,4 @@ Nhóm: **Nhóm 15 - Lớp 65KTPM**
 cd nhom15-65ktpm/src
 flutter test
 ```
-Tất cả các ca kiểm thử trên được cài đặt sẵn tại thư mục `test/` và đạt tỷ lệ vượt qua 100%.
+Tất cả 21 ca kiểm thử trên được cài đặt sẵn tại thư mục `test/` và đạt tỷ lệ vượt qua 100%.

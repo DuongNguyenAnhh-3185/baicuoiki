@@ -6,8 +6,8 @@ import '../../../../injection_container.dart';
 import '../../../../shared/entities/attempt_log.dart';
 import '../../../../shared/entities/soroban_question.dart';
 import '../../../../shared/widgets/mascot_bubble.dart';
-import 'package:soroban_kids_app/features/1_abacus_engine/presentation/controllers/abacus_controller.dart';
-import 'package:soroban_kids_app/features/1_abacus_engine/presentation/widgets/soroban_board_widget.dart';
+import 'package:soroban_kids_app/features/1_abacus_engine/presentation/controllers/finger_math_controller.dart';
+import 'package:soroban_kids_app/features/1_abacus_engine/presentation/widgets/finger_math_board_widget.dart';
 import 'package:soroban_kids_app/features/4_ai_voice_tutor/domain/engine/adaptive_tutor_engine.dart';
 import 'package:soroban_kids_app/features/4_ai_voice_tutor/presentation/widgets/voice_answer_mic_button.dart';
 import 'package:soroban_kids_app/features/3_lessons_flash_anzan/domain/question_generator.dart';
@@ -24,36 +24,59 @@ class LessonPlayScreen extends StatefulWidget {
 class _LessonPlayScreenState extends State<LessonPlayScreen> {
   final AudioService _audioService = sl<AudioService>();
   final StorageService _storageService = sl<StorageService>();
-  late AbacusController _abacusController;
+  late FingerMathController _fingerController;
 
   late SorobanQuestion _currentQuestion;
   int _questionIndex = 1;
-  String _mascotSpeech = 'Bé hãy nhìn phép tính và gảy hạt bàn tính nhé!';
+  String _mascotSpeech = 'Bé hãy nhìn phép tính và gảy ngón tay Finger Math nhé!';
+  String _formulaHint = '';
   DateTime _questionStartTime = DateTime.now();
 
   @override
   void initState() {
     super.initState();
-    _abacusController = AbacusController(columnCount: 2);
+    // Cấp 1 & 2 dùng 1 bàn tay phải (hàng đơn vị) hoặc 2 bàn tay nếu kết quả > 9
+    _fingerController = FingerMathController(showLeftHand: widget.level >= 2);
     _loadNextQuestion();
   }
 
   @override
   void dispose() {
-    _abacusController.dispose();
+    _fingerController.dispose();
     super.dispose();
   }
 
   void _loadNextQuestion() {
     setState(() {
       _currentQuestion = QuestionGenerator.generate(widget.level);
-      _abacusController.reset();
+      _fingerController.reset();
       _questionStartTime = DateTime.now();
-      _mascotSpeech = 'Phép tính: ${_currentQuestion.formulaExpression} = ?';
+
+      // Tạo gợi ý công thức Finger Math (Anh bạn nhỏ / Anh bạn lớn)
+      _formulaHint = _getFingerMathFormulaHint(_currentQuestion);
+      _mascotSpeech = 'Phép tính: ${_currentQuestion.formulaExpression} = ?\n$_formulaHint';
     });
     _audioService.speak(
-      'Bé ơi, hãy tính: ${_currentQuestion.formulaExpression}',
+      'Bé ơi, hãy tính: ${_currentQuestion.formulaExpression}. $_formulaHint',
     );
+  }
+
+  String _getFingerMathFormulaHint(SorobanQuestion q) {
+    if (q.level == 1) {
+      return 'Bung các ngón tay theo từng số đếm nhé!';
+    }
+    // Cấp độ 2: Công thức Anh Bạn Nhỏ (với ngón cái 5)
+    for (final op in q.operands) {
+      if (op == 4) return 'Công thức Anh bạn nhỏ: +4 = +5 - 1 (Xòe anh béo 5, cụp 1 ngón dài)';
+      if (op == 3) return 'Công thức Anh bạn nhỏ: +3 = +5 - 2 (Xòe anh béo 5, cụp 2 ngón dài)';
+      if (op == 2) return 'Công thức Anh bạn nhỏ: +2 = +5 - 3 (Xòe anh béo 5, cụp 3 ngón dài)';
+      if (op == 1) return 'Công thức Anh bạn nhỏ: +1 = +5 - 4 (Xòe anh béo 5, cụp 4 ngón dài)';
+      if (op == -1) return 'Công thức Anh bạn nhỏ: -1 = -5 + 4 (Cụp anh béo 5, xòe 4 ngón dài)';
+      if (op == -2) return 'Công thức Anh bạn nhỏ: -2 = -5 + 3 (Cụp anh béo 5, xòe 3 ngón dài)';
+      if (op == -3) return 'Công thức Anh bạn nhỏ: -3 = -5 + 2 (Cụp anh béo 5, xòe 2 ngón dài)';
+      if (op == -4) return 'Công thức Anh bạn nhỏ: -4 = -5 + 1 (Cụp anh béo 5, xòe 1 ngón dài)';
+    }
+    return 'Áp dụng công thức ngón tay để tính nhanh nhé!';
   }
 
   Future<void> _checkAnswer(int answer, String answeredVia) async {
@@ -176,8 +199,8 @@ class _LessonPlayScreenState extends State<LessonPlayScreen> {
       appBar: AppBar(
         title: Text(
           widget.level == 1
-              ? 'Hạt Nhỏ Nhận Diện'
-              : 'Công Thức Anh Bạn Nhỏ',
+              ? 'Finger Math: Đếm Ngón Cơ Bản'
+              : 'Finger Math: Anh Bạn Nhỏ & Lớn',
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: AppColors.cardBg,
@@ -208,7 +231,7 @@ class _LessonPlayScreenState extends State<LessonPlayScreen> {
           children: [
             // Mascot Bubble trên cùng
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
               child: MascotBubbleWidget(
                 speechText: _mascotSpeech,
                 onMascotTap: () {
@@ -219,11 +242,11 @@ class _LessonPlayScreenState extends State<LessonPlayScreen> {
 
             // Khung hiển thị phép tính to rõ
             Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(24),
+                borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.05),
@@ -236,7 +259,7 @@ class _LessonPlayScreenState extends State<LessonPlayScreen> {
                 child: Text(
                   _currentQuestion.formulaExpression,
                   style: const TextStyle(
-                    fontSize: 48,
+                    fontSize: 44,
                     fontWeight: FontWeight.w900,
                     color: AppColors.primary,
                     letterSpacing: 2,
@@ -245,18 +268,18 @@ class _LessonPlayScreenState extends State<LessonPlayScreen> {
               ),
             ),
 
-            // Bàn tính ảo Soroban
+            // Bàn tay Finger Math tương tác
             Expanded(
               child: Center(
-                child: SorobanBoardWidget(
-                  controller: _abacusController,
+                child: FingerMathBoardWidget(
+                  controller: _fingerController,
                   height: 220,
                   showLiveValue: true,
                 ),
               ),
             ),
 
-            // Nút trả lời (Gửi kết quả bàn tính hoặc Bấm nói giọng nói)
+            // Nút trả lời (Gửi kết quả bàn tay hoặc Bấm nói giọng nói)
             Padding(
               padding: const EdgeInsets.all(16),
               child: Row(
@@ -265,16 +288,16 @@ class _LessonPlayScreenState extends State<LessonPlayScreen> {
                   ElevatedButton.icon(
                     onPressed: () {
                       _checkAnswer(
-                        _abacusController.totalValue,
-                        'abacus_touch',
+                        _fingerController.totalValue,
+                        'finger_touch',
                       );
                     },
-                    icon: const Icon(Icons.check_circle, size: 28),
-                    label: const Text('GỬI BÀN TÍNH'),
+                    icon: const Icon(Icons.front_hand, size: 26),
+                    label: const Text('GỬI NGÓN TAY ✋'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.success,
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 24,
+                        horizontal: 20,
                         vertical: 14,
                       ),
                     ),

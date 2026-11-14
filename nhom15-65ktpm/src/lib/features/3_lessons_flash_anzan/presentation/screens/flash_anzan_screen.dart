@@ -6,8 +6,8 @@ import '../../../../core/services/storage_service.dart';
 import '../../../../injection_container.dart';
 import '../../../../shared/entities/attempt_log.dart';
 import '../../../../shared/entities/soroban_question.dart';
-import 'package:soroban_kids_app/features/1_abacus_engine/presentation/controllers/abacus_controller.dart';
-import 'package:soroban_kids_app/features/1_abacus_engine/presentation/widgets/soroban_board_widget.dart';
+import 'package:soroban_kids_app/features/1_abacus_engine/presentation/controllers/finger_math_controller.dart';
+import 'package:soroban_kids_app/features/1_abacus_engine/presentation/widgets/finger_math_board_widget.dart';
 import 'package:soroban_kids_app/features/4_ai_voice_tutor/domain/engine/adaptive_tutor_engine.dart';
 import 'package:soroban_kids_app/features/4_ai_voice_tutor/presentation/widgets/voice_answer_mic_button.dart';
 import 'package:soroban_kids_app/features/3_lessons_flash_anzan/domain/question_generator.dart';
@@ -24,7 +24,7 @@ class FlashAnzanScreen extends StatefulWidget {
 class _FlashAnzanScreenState extends State<FlashAnzanScreen> {
   final AudioService _audioService = sl<AudioService>();
   final StorageService _storageService = sl<StorageService>();
-  late AbacusController _abacusController;
+  late FingerMathController _fingerController;
 
   late SorobanQuestion _currentQuestion;
   int _flashSpeedMs = 1200;
@@ -39,24 +39,24 @@ class _FlashAnzanScreenState extends State<FlashAnzanScreen> {
   void initState() {
     super.initState();
     _flashSpeedMs = widget.initialSpeedMs;
-    _abacusController = AbacusController(columnCount: 2);
+    _fingerController = FingerMathController(showLeftHand: true);
     _nextQuestion();
   }
 
   @override
   void dispose() {
-    _abacusController.dispose();
+    _fingerController.dispose();
     super.dispose();
   }
 
   void _nextQuestion() {
     setState(() {
       _currentQuestion = QuestionGenerator.generate(3, flashSpeedMs: _flashSpeedMs);
-      _abacusController.reset();
+      _fingerController.reset();
       _waitingForAnswer = false;
       _displayNumber = 'SẴN SÀNG?';
       _displayColor = AppColors.secondary;
-      _feedbackMessage = 'Nhấn nút để bắt đầu tính nhẩm!';
+      _feedbackMessage = 'Nhấn nút để bắt đầu tính nhẩm Finger Math!';
     });
   }
 
@@ -108,7 +108,7 @@ class _FlashAnzanScreenState extends State<FlashAnzanScreen> {
       _waitingForAnswer = true;
       _displayNumber = '?';
       _displayColor = AppColors.accentYellow;
-      _feedbackMessage = 'Bé gảy kết quả lên bàn tính hoặc đọc to nhé!';
+      _feedbackMessage = 'Bé bung ngón tay Finger Math hoặc đọc to đáp án nhé!';
     });
     await _audioService.speak('Bằng bao nhiêu bé ơi?');
   }
@@ -213,7 +213,7 @@ class _FlashAnzanScreenState extends State<FlashAnzanScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          '⚡ Flash Anzan - Tính Nhẩm Nhanh',
+          '⚡ Flash Anzan - Finger Math Siêu Tốc',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: AppColors.cardBg,
@@ -242,7 +242,7 @@ class _FlashAnzanScreenState extends State<FlashAnzanScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            const SizedBox(height: 12),
+            const SizedBox(height: 10),
             // Khung hiển thị số chớp nhoáng
             Expanded(
               flex: 4,
@@ -250,7 +250,7 @@ class _FlashAnzanScreenState extends State<FlashAnzanScreen> {
                 margin: const EdgeInsets.symmetric(horizontal: 20),
                 decoration: BoxDecoration(
                   color: _displayColor,
-                  borderRadius: BorderRadius.circular(32),
+                  borderRadius: BorderRadius.circular(28),
                   boxShadow: [
                     BoxShadow(
                       color: _displayColor.withOpacity(0.35),
@@ -263,7 +263,7 @@ class _FlashAnzanScreenState extends State<FlashAnzanScreen> {
                   child: Text(
                     _displayNumber,
                     style: const TextStyle(
-                      fontSize: 82,
+                      fontSize: 76,
                       fontWeight: FontWeight.w900,
                       color: Colors.white,
                       letterSpacing: 2,
@@ -272,7 +272,7 @@ class _FlashAnzanScreenState extends State<FlashAnzanScreen> {
                 ),
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 10),
 
             // Lời hướng dẫn hoặc nút bắt đầu
             Padding(
@@ -281,7 +281,7 @@ class _FlashAnzanScreenState extends State<FlashAnzanScreen> {
                 _feedbackMessage,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
-                  fontSize: 16,
+                  fontSize: 15,
                   fontWeight: FontWeight.w700,
                   color: AppColors.textDark,
                 ),
@@ -290,29 +290,29 @@ class _FlashAnzanScreenState extends State<FlashAnzanScreen> {
 
             if (!_isFlashing && !_waitingForAnswer)
               Padding(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(10),
                 child: ElevatedButton.icon(
                   onPressed: _startFlashSequence,
-                  icon: const Icon(Icons.play_arrow, size: 32),
+                  icon: const Icon(Icons.play_arrow, size: 30),
                   label: const Text('BẮT ĐẦU CHỚP SỐ'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary,
-                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
+                    padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
                   ),
                 ),
               ),
 
-            // Bàn tính ảo để bé gảy kết quả
+            // Bàn tay Finger Math để bé bung ngón tay
             Expanded(
               flex: 5,
-              child: SorobanBoardWidget(
-                controller: _abacusController,
+              child: FingerMathBoardWidget(
+                controller: _fingerController,
                 height: 200,
                 showLiveValue: true,
               ),
             ),
 
-            // Nút trả lời bằng bàn tính & Micro AI giọng nói
+            // Nút trả lời bằng ngón tay & Micro AI giọng nói
             if (_waitingForAnswer)
               Padding(
                 padding: const EdgeInsets.only(bottom: 12, left: 20, right: 20),
@@ -321,13 +321,13 @@ class _FlashAnzanScreenState extends State<FlashAnzanScreen> {
                   children: [
                     ElevatedButton(
                       onPressed: () {
-                        _checkAnswer(_abacusController.totalValue, 'abacus_touch');
+                        _checkAnswer(_fingerController.totalValue, 'finger_touch');
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.success,
-                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                        padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 14),
                       ),
-                      child: const Text('GỬI BÀN TÍNH ✅', style: TextStyle(fontSize: 16)),
+                      child: const Text('GỬI NGÓN TAY ✋', style: TextStyle(fontSize: 15)),
                     ),
                     VoiceAnswerMicButton(
                       onAnswerDetected: (answer, raw) {

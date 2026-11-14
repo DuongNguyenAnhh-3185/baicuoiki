@@ -5,8 +5,8 @@ import '../../../../core/services/storage_service.dart';
 import '../../../../injection_container.dart';
 import '../../../../shared/entities/child_profile.dart';
 import '../../../../shared/widgets/mascot_bubble.dart';
-import 'package:soroban_kids_app/features/1_abacus_engine/presentation/controllers/abacus_controller.dart';
-import 'package:soroban_kids_app/features/1_abacus_engine/presentation/widgets/soroban_board_widget.dart';
+import 'package:soroban_kids_app/features/1_abacus_engine/presentation/controllers/finger_math_controller.dart';
+import 'package:soroban_kids_app/features/1_abacus_engine/presentation/widgets/finger_math_board_widget.dart';
 import 'package:soroban_kids_app/features/3_lessons_flash_anzan/presentation/screens/flash_anzan_screen.dart';
 import 'package:soroban_kids_app/features/3_lessons_flash_anzan/presentation/screens/lesson_play_screen.dart';
 import '../widgets/parental_gate_dialog.dart';
@@ -34,19 +34,19 @@ class _HomeScreenState extends State<HomeScreen> {
     final profile = await _storageService.getChildProfile();
     setState(() => _profile = profile);
     _audioService.speak(
-      'Chào mừng bé đến với thế giới bàn tính Soroban! Bé chọn bài học nhé!',
+      'Chào mừng bé đến với thế giới Finger Math toán ngón tay kỳ diệu! Bé chọn bài học nhé!',
     );
   }
 
   void _openFreePlayModal() {
-    final controller = AbacusController(columnCount: 3);
+    final controller = FingerMathController(showLeftHand: true);
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) {
         return Container(
-          height: MediaQuery.of(context).size.height * 0.65,
+          height: MediaQuery.of(context).size.height * 0.7,
           decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(
@@ -69,9 +69,9 @@ class _HomeScreenState extends State<HomeScreen> {
               const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('🧮 ', style: TextStyle(fontSize: 26)),
+                  Text('✋ ', style: TextStyle(fontSize: 26)),
                   Text(
-                    'Bàn Tính Soroban Tự Do',
+                    'Bàn Tay Finger Math Tự Do',
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.w900,
@@ -80,14 +80,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 8),
               const Text(
-                'Bé hãy gảy các hạt bàn tính để xem số thay đổi nhé!',
-                style: TextStyle(fontSize: 15, color: AppColors.textLight),
+                'Bé chạm vào ngón cái (Anh béo = 5) và các ngón dài để bung ngón tay nhé!',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 14, color: AppColors.textLight),
               ),
               const SizedBox(height: 16),
               Expanded(
-                child: SorobanBoardWidget(
+                child: FingerMathBoardWidget(
                   controller: controller,
                   height: 220,
                   showLiveValue: true,
@@ -95,8 +96,10 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               ElevatedButton.icon(
                 onPressed: () {
+                  final val = controller.totalValue;
+                  final alias = controller.rightHand.cartoonAlias;
                   _audioService.speak(
-                    'Số hiện tại là ${controller.totalValue}',
+                    'Số hiện tại là $val, $alias',
                   );
                 },
                 icon: const Icon(Icons.volume_up, size: 24),
@@ -199,10 +202,10 @@ class _HomeScreenState extends State<HomeScreen> {
               // Linh vật hoạt hình Mascot
               MascotBubbleWidget(
                 speechText:
-                    'Hôm nay bé muốn gảy bàn tính hay thi đấu tính nhẩm nhanh nè?',
+                    'Hôm nay bé muốn đếm ngón tay Finger Math hay thi đấu tính nhẩm nhanh nè?',
                 onMascotTap: () {
                   _audioService.speak(
-                    'Hôm nay bé muốn gảy bàn tính hay thi đấu tính nhẩm nhanh nè?',
+                    'Hôm nay bé muốn đếm ngón tay Finger Math hay thi đấu tính nhẩm nhanh nè?',
                   );
                 },
               ),
@@ -210,10 +213,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
               // Danh sách 3 Cấp độ học tập dạng thẻ to rực rỡ
               _buildLevelCard(
-                title: 'CẤP ĐỘ 1: HẠT NHỎ NHẬN DIỆN',
-                subtitle: 'Làm quen hạt trên (5), hạt dưới (1) và cộng trừ trực tiếp',
+                title: 'CẤP ĐỘ 1: FINGER MATH CƠ BẢN',
+                subtitle: 'Đếm ngón 0-9: Cái búa (0), Cây nến (1), Tai thỏ (2), Anh béo (5)',
                 color: AppColors.secondary,
-                emoji: '🌱',
+                emoji: '✌️',
                 badgeText: 'Cơ Bản',
                 onTap: () {
                   Navigator.push(
@@ -227,11 +230,11 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 16),
 
               _buildLevelCard(
-                title: 'CẤP ĐỘ 2: ANH BẠN NHỎ',
-                subtitle: 'Công thức cộng trừ kết hợp hạt 5 (+4 = +5 - 1)',
+                title: 'CẤP ĐỘ 2: ANH BẠN NHỎ & ANH BẠN LỚN',
+                subtitle: 'Công thức xòe/gập ngón tay: +4 = +5 - 1, +9 = +10 - 1',
                 color: AppColors.primary,
-                emoji: '⭐',
-                badgeText: 'Nâng Cao',
+                emoji: '👍',
+                badgeText: 'Công Thức',
                 onTap: () {
                   Navigator.push(
                     context,
@@ -244,8 +247,8 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 16),
 
               _buildLevelCard(
-                title: 'CẤP ĐỘ 3: FLASH ANZAN',
-                subtitle: 'Tính nhẩm nhanh với các con số chớp nhoáng trên màn hình',
+                title: 'CẤP ĐỘ 3: FLASH ANZAN FINGER MATH',
+                subtitle: 'Tính nhẩm nhanh siêu tốc bằng 2 bàn tay (0 - 99)',
                 color: AppColors.accentPurple,
                 emoji: '⚡',
                 badgeText: 'Siêu Tốc',
@@ -260,11 +263,11 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 20),
 
-              // Nút Bàn tính tự do
+              // Nút Bàn tay Finger Math tự do
               OutlinedButton.icon(
                 onPressed: _openFreePlayModal,
-                icon: const Icon(Icons.touch_app, size: 26),
-                label: const Text('BÀN TÍNH TỰ DO (CHƠI TỰ DO)'),
+                icon: const Icon(Icons.front_hand, size: 26),
+                label: const Text('BÀN TAY FINGER MATH (CHƠI TỰ DO) ✋'),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: AppColors.textDark,
                   side: const BorderSide(color: AppColors.primary, width: 2),
@@ -352,7 +355,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Text(
                     title,
                     style: const TextStyle(
-                      fontSize: 17,
+                      fontSize: 16,
                       fontWeight: FontWeight.w900,
                       color: Colors.white,
                     ),

@@ -9,12 +9,15 @@
 Trẻ em trong độ tuổi từ 4 đến 6 tuổi đang ở "giai đoạn vàng" phát triển não bộ và tư duy logic không gian. Phương pháp tính nhẩm Soroban (bàn tính gảy Nhật Bản) giúp trẻ kích thích sự phối hợp giữa hai bán cầu não thông qua việc hình dung các hạt bàn tính. Tuy nhiên, việc học toán theo cách truyền thống thường khô khan và gây quá tải đối với trẻ chưa biết đọc chữ.
 
 **Soroban Kids App** giải quyết bài toán trên bằng cách:
-1. **Phạm vi toán học tinh gọn (Chỉ giới hạn ở phép Cộng & Trừ):** Toàn bộ bài tập, công thức hạt (Anh bạn nhỏ/lớn) và tính nhẩm Flash Anzan đều được thiết kế độc quyền cho phép cộng và trừ (phạm vi từ 0 đến 99), phù hợp hoàn hảo với tư duy lứa tuổi mầm non (4–6 tuổi).
-2. **Giao diện Không chữ (Zero-Text UI):** Tối ưu trải nghiệm cho trẻ 4–6 tuổi bằng biểu tượng trực quan, màu sắc thân thiện và giọng nói hướng dẫn thay thế hoàn toàn văn bản.
-3. **Bàn tính ảo Soroban tương tác thực tế:** Vẽ bằng `CustomPainter` với hiệu ứng xúc giác và âm thanh chân thực khi hạt chạm thanh xà ngang.
-4. **AI Trợ lý giọng nói tiếng Việt:** Ứng dụng công nghệ Speech-to-Text để trẻ đọc to kết quả bằng lời nói mà không cần gõ bàn phím.
-5. **Gia sư thích ứng (Adaptive Learning):** Phân tích thời gian và độ chính xác để tự động điều chỉnh tốc độ Flash Anzan và độ khó phép tính.
-6. **Gamified Discipline:** Xây dựng thói quen học tập bền vững qua hệ thống chuỗi Streak, huy hiệu và báo cáo phụ huynh minh bạch.
+1. **Bàn tay Finger Math tương tác trực quan (Chuẩn Flashcard 1D):** Thay thế các hạt tính trừu tượng bằng chính đôi bàn tay của trẻ. Ngón cái là "Anh béo" mang giá trị 5, bốn ngón dài mỗi ngón mang giá trị 1. Tay phải đại diện cho hàng đơn vị ($0 \dots 9$), tay trái đại diện cho hàng chục ($0 \dots 90$), cho phép trẻ tính nhẩm linh hoạt từ $0$ đến $99$.
+2. **Hiện thực hóa trọn vẹn công thức Anh Bạn Nhỏ & Anh Bạn Lớn:**
+   - *Anh Bạn Nhỏ:* Quy tắc kết hợp với ngón cái 5 ($+4 = +5 - 1$, $+3 = +5 - 2$, $-1 = -5 + 4$,...).
+   - *Anh Bạn Lớn:* Quy tắc kết hợp mượn ngón tay trái hàng chục 10 ($+9 = +10 - 1$, $+8 = +10 - 2$,...).
+3. **Phạm vi toán học tinh gọn (Chỉ giới hạn ở phép Cộng & Trừ):** Toàn bộ bài tập và Flash Anzan đều được thiết kế độc quyền cho phép cộng và trừ (phạm vi từ 0 đến 99), phù hợp hoàn hảo với tư duy lứa tuổi mầm non (4–6 tuổi).
+4. **Giao diện Không chữ (Zero-Text UI):** Tối ưu trải nghiệm cho trẻ 4–6 tuổi bằng biểu tượng trực quan, màu sắc thân thiện và giọng nói hướng dẫn thay thế hoàn toàn văn bản.
+5. **AI Trợ lý giọng nói tiếng Việt:** Ứng dụng công nghệ Speech-to-Text để trẻ đọc to kết quả bằng lời nói mà không cần gõ bàn phím.
+6. **Gia sư thích ứng (Adaptive Learning):** Phân tích thời gian và độ chính xác để tự động điều chỉnh tốc độ Flash Anzan và độ khó phép tính.
+7. **Gamified Discipline:** Xây dựng thói quen học tập bền vững qua hệ thống chuỗi Streak, huy hiệu và báo cáo phụ huynh minh bạch.
 
 ---
 

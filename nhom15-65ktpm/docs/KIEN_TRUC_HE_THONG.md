@@ -88,16 +88,46 @@ graph TD
 
 ---
 
-## 3. Kiến Trúc Bàn Tính Ảo Soroban (Abacus Engine)
+## 3. Kiến Trúc Đồ Họa Tương Tác Finger Math (Finger Math Engine)
 
-- **Cấu trúc 1 cột Soroban chuẩn:**
-  - **Thanh xà ngang (Beam):** Phân chia hạt trên và hạt dưới.
-  - **Hạt trên (Upper Deck):** 1 hạt (giá trị = 5). Khi kéo xuống sát thanh xà ngang $\rightarrow$ hạt kích hoạt (+5).
-  - **Hạt dưới (Lower Deck):** 4 hạt (mỗi hạt giá trị = 1). Khi đẩy lên sát thanh xà ngang $\rightarrow$ hạt kích hoạt (+1 mỗi hạt).
-- **Cơ chế CustomPainter & HitTest:**
-  - Tối ưu hóa render 60fps bằng `CustomPainter`.
-  - Phân vùng cảm ứng theo trục tung ($Y$) và trục hoành ($X$) tương ứng từng cột hạt.
-  - Tích hợp hiệu ứng âm thanh gảy hạt "tách" và rung phản hồi (Haptic Feedback) khi hạt chạm xà ngang.
+Hệ thống mô phỏng trực quan chuẩn quốc tế **Flash Card 1D (Right Hand - Hàng đơn vị & Left Hand - Hàng chục)** giúp trẻ 4–6 tuổi ghi nhớ và thao tác số học thông qua chính đôi bàn tay:
+
+### 3.1. Bảng mã hóa số trên bàn tay (0 đến 9)
+- **Số 0 (Cái Búa ✊):** Toàn bộ 5 ngón gập lại thành nắm đấm.
+- **Số 1 (Cây Nến ☝️):** Bung 1 ngón trỏ.
+- **Số 2 (Tai Thỏ ✌️):** Bung 2 ngón (trỏ + giữa).
+- **Số 3 (Cái Nĩa 🤟):** Bung 3 ngón (trỏ + giữa + áp út).
+- **Số 4 (Cái Quạt ✋):** Bung 4 ngón dài, ngón cái cụp.
+- **Số 5 (Anh Béo 👍):** **Ngón cái xòe ra (giá trị = 5)**, 4 ngón dài cụp lại.
+- **Số 6 (Súng Nhỏ 🔫):** Ngón cái (5) + 1 ngón trỏ (1) = 6.
+- **Số 7 (Súng Lớn 👈):** Ngón cái (5) + 2 ngón (2) = 7.
+- **Số 8 (Cua Kẹp 🦀):** Ngón cái (5) + 3 ngón (3) = 8.
+- **Số 9 (Bàn Tay Xòe 🖐️):** Bung toàn bộ 5 ngón (5 + 4 = 9).
+
+### 3.2. Cơ chế 2 bàn tay tính toán phạm vi 0 đến 99
+- **Tay Phải (Right Hand - RH):** Đảm nhiệm hàng đơn vị ($0 \dots 9$).
+- **Tay Trái (Left Hand - LH):** Đảm nhiệm hàng chục ($00, 10, 20 \dots 90$).
+- Ví dụ: Số `37` = Tay trái giơ 3 ngón (30) + Tay phải giơ súng lớn (7).
+
+### 3.3. Hiện thực hóa các công thức toán tư duy
+#### a. Công thức Anh Bạn Nhỏ (Cặp số có tổng bằng 5: 1-4, 2-3)
+- Phép cộng (+1, +2, +3, +4): Khi không đủ ngón dài để xòe $\rightarrow$ Xòe ngón cái (Anh béo +5) và gập các ngón thừa:
+  - $+4 = +5 - 1$ (Xòe anh béo 5, cụp 1 ngón dài)
+  - $+3 = +5 - 2$ (Xòe anh béo 5, cụp 2 ngón dài)
+  - $+2 = +5 - 3$ (Xòe anh béo 5, cụp 3 ngón dài)
+  - $+1 = +5 - 4$ (Xòe anh béo 5, cụp 4 ngón dài)
+- Phép trừ (-1, -2, -3, -4): Khi không đủ ngón dài để gập $\rightarrow$ Gập ngón cái (Anh béo -5) và xòe các ngón tương ứng:
+  - $-1 = -5 + 4$ (Cụp anh béo 5, xòe 4 ngón dài)
+  - $-2 = -5 + 3$ (Cụp anh béo 5, xòe 3 ngón dài)
+  - $-3 = -5 + 2$ (Cụp anh béo 5, xòe 2 ngón dài)
+  - $-4 = -5 + 1$ (Cụp anh béo 5, xòe 1 ngón dài)
+
+#### b. Công thức Anh Bạn Lớn (Cặp số có tổng bằng 10: 9-1, 8-2, 7-3,...)
+- Phép cộng qua 10 (+9, +8, +7,...): Khi tay phải hết ngón $\rightarrow$ Bung 1 ngón tay trái (hàng chục +10) và cụp anh bạn lớn ở tay phải:
+  - $+9 = +10 - 1$ (Tay trái +1, tay phải -1)
+  - $+8 = +10 - 2$ (Tay trái +1, tay phải -2)
+  - $+7 = +10 - 3$ (Tay trái +1, tay phải -3)
+- Phép trừ qua 10: Gập 1 ngón tay trái (-10) và xòe anh bạn lớn ở tay phải.
 
 ---
 
