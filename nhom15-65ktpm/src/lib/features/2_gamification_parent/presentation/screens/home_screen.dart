@@ -5,8 +5,10 @@ import '../../../../core/services/storage_service.dart';
 import '../../../../injection_container.dart';
 import '../../../../shared/entities/child_profile.dart';
 import '../../../../shared/widgets/mascot_bubble.dart';
+import 'package:soroban_kids_app/features/1_abacus_engine/presentation/controllers/abacus_controller.dart';
 import 'package:soroban_kids_app/features/1_abacus_engine/presentation/controllers/finger_math_controller.dart';
 import 'package:soroban_kids_app/features/1_abacus_engine/presentation/widgets/finger_math_board_widget.dart';
+import 'package:soroban_kids_app/features/1_abacus_engine/presentation/widgets/soroban_board_widget.dart';
 import 'package:soroban_kids_app/features/3_lessons_flash_anzan/presentation/screens/flash_anzan_screen.dart';
 import 'package:soroban_kids_app/features/3_lessons_flash_anzan/presentation/screens/lesson_play_screen.dart';
 import '../widgets/parental_gate_dialog.dart';
@@ -39,79 +41,114 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _openFreePlayModal() {
-    final controller = FingerMathController(showLeftHand: true);
+    final fingerController = FingerMathController(showLeftHand: true);
+    final abacusController = AbacusController(columnCount: 4);
+    int selectedTab = 0; // 0: Finger Math, 1: Soroban
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) {
-        return Container(
-          height: MediaQuery.of(context).size.height * 0.7,
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(32),
-              topRight: Radius.circular(32),
-            ),
-          ),
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              Container(
-                width: 48,
-                height: 6,
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade300,
-                  borderRadius: BorderRadius.circular(10),
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return Container(
+              height: MediaQuery.of(context).size.height * 0.75,
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(32),
+                  topRight: Radius.circular(32),
                 ),
               ),
-              const SizedBox(height: 16),
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              padding: const EdgeInsets.all(20),
+              child: Column(
                 children: [
-                  Text('✋ ', style: TextStyle(fontSize: 26)),
+                  Container(
+                    width: 48,
+                    height: 6,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade300,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  // Chuyển đổi giữa 2 chế độ học toán
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ChoiceChip(
+                        label: const Text(
+                          '✋ Bàn Tay Finger Math',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        selected: selectedTab == 0,
+                        selectedColor: AppColors.secondary.withOpacity(0.25),
+                        onSelected: (val) {
+                          if (val) setModalState(() => selectedTab = 0);
+                        },
+                      ),
+                      const SizedBox(width: 12),
+                      ChoiceChip(
+                        label: const Text(
+                          '🧮 Bàn Tính Soroban',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        selected: selectedTab == 1,
+                        selectedColor: AppColors.primary.withOpacity(0.2),
+                        onSelected: (val) {
+                          if (val) setModalState(() => selectedTab = 1);
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
                   Text(
-                    'Bàn Tay Finger Math Tự Do',
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w900,
-                      color: AppColors.textDark,
+                    selectedTab == 0
+                        ? 'Bé chạm vào các ngón trên Tay Phải (đơn vị: 0-9) và Tay Trái (hàng chục: 10-90) nhé!'
+                        : 'Bé chạm gạt hạt trên (5) và các hạt dưới (1) để tính toán nhé!',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontSize: 13, color: AppColors.textLight),
+                  ),
+                  const SizedBox(height: 12),
+                  Expanded(
+                    child: selectedTab == 0
+                        ? FingerMathBoardWidget(
+                            controller: fingerController,
+                            height: 220,
+                            showLiveValue: true,
+                          )
+                        : SorobanBoardWidget(
+                            controller: abacusController,
+                            height: 230,
+                            showLiveValue: true,
+                          ),
+                  ),
+                  const SizedBox(height: 8),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      if (selectedTab == 0) {
+                        _audioService.speak(fingerController.speechDescription);
+                      } else {
+                        final val = abacusController.totalValue;
+                        _audioService.speak('Bàn tính Soroban đang có giá trị là $val');
+                      }
+                    },
+                    icon: const Icon(Icons.volume_up, size: 24),
+                    label: const Text('Đọc Số Này Cho Bé Nghe'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor:
+                          selectedTab == 0 ? AppColors.secondary : AppColors.primary,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 12,
+                      ),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 8),
-              const Text(
-                'Bé chạm vào các ngón trên Tay Phải (đơn vị: 0-9) và Tay Trái (hàng chục: 10-90) nhé!',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 14, color: AppColors.textLight),
-              ),
-              const SizedBox(height: 16),
-              Expanded(
-                child: FingerMathBoardWidget(
-                  controller: controller,
-                  height: 220,
-                  showLiveValue: true,
-                ),
-              ),
-              ElevatedButton.icon(
-                onPressed: () {
-                  _audioService.speak(
-                    controller.speechDescription,
-                  );
-                },
-                icon: const Icon(Icons.volume_up, size: 24),
-                label: const Text('Đọc Số Này Cho Bé Nghe'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.secondary,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 12,
-                  ),
-                ),
-              ),
-            ],
-          ),
+            );
+          },
         );
       },
     );
