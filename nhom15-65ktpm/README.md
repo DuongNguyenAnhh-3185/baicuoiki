@@ -45,7 +45,7 @@ nhom15-65ktpm/
 ├── README.md                     # Tài liệu tổng quan dự án
 ├── docs/                         # Hồ sơ tài liệu đồ án
 │   ├── KIEN_TRUC_HE_THONG.md     # Kiến trúc kỹ thuật và hợp đồng dữ liệu
-│   ├── KICH_BAN_TEST.md          # 19 ca kiểm thử tự động
+│   ├── KICH_BAN_TEST.md          # 21 ca kiểm thử tự động
 │   ├── KICH_BAN_DEMO_VIDEO.md    # Kịch bản quay video demo 5 phút
 │   ├── SLIDE_THUYET_TRINH.md     # 13 slide thuyết trình bảo vệ đồ án
 │   ├── DE_CUONG_BAO_CAO.md       # Đề cương báo cáo 5 chương
@@ -59,7 +59,7 @@ nhom15-65ktpm/
     │       ├── 2_gamification/   # Zero-Text UI, Streak, Cổng phụ huynh & biểu đồ
     │       ├── 3_lessons/        # Bộ sinh đề cộng trừ & Flash Anzan siêu tốc
     │       └── 4_ai_voice/       # AI Speech-to-Text tiếng Việt & Gia sư thích ứng
-    └── test/                     # 19 Unit Tests tự động đạt 100%
+    └── test/                     # 21 Unit Tests tự động đạt 100%
 ```
 
 ---
@@ -78,7 +78,7 @@ cd nhom15-65ktpm\src
 # Cài đặt các gói phụ thuộc
 flutter pub get
 
-# Chạy toàn bộ 19 ca kiểm thử tự động
+# Chạy toàn bộ 21 ca kiểm thử tự động
 flutter test
 
 # Kiểm tra chất lượng mã nguồn
